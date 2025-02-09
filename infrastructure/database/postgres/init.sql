@@ -1,10 +1,8 @@
+CREATE DATABASE user_service;
+
 -- Tworzymy użytkowników z prostymi hasłami
 CREATE USER root WITH PASSWORD 'root';
 CREATE USER readonly_user WITH PASSWORD 'password';
-
--- Tworzymy bazę danych, jeśli jeszcze nie istnieje
--- CREATE DATABASE dev_beatsy;
-CREATE DATABASE user_service;
 
 -- Przyznajemy pełne uprawnienia użytkownikowi root
 GRANT ALL PRIVILEGES ON DATABASE dev_beatsy TO root;
