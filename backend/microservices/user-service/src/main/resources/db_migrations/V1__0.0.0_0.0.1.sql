@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS roles
 (
-    id          SERIAL PRIMARY KEY,
+    id          BIGINT PRIMARY KEY,
     name        VARCHAR(50) UNIQUE NOT NULL,
     is_default  BOOLEAN            NOT NULL DEFAULT FALSE,
     created_at  TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS roles
 
 CREATE TABLE IF NOT EXISTS user_roles
 (
-    id          SERIAL PRIMARY KEY,
+    id          BIGINT PRIMARY KEY,
     user_id     INT NOT NULL,
     role_id     INT NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
