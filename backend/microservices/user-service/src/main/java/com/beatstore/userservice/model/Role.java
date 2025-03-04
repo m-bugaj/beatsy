@@ -6,13 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Roles {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,13 +25,10 @@ public class Roles {
     @Column(nullable = false)
     private Boolean isDefault;
 
-    //    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Set<Role> roles = new HashSet<>();
+    @OneToMany(
+            mappedBy = "role"
+    )
+    private Set<UserRoles> userRoles = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
