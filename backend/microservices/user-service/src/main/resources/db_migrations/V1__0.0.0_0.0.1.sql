@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS roles
 CREATE TABLE IF NOT EXISTS user_roles
 (
     id          BIGINT PRIMARY KEY,
-    user_id     INT NOT NULL,
-    role_id     INT NOT NULL,
+    user_id     BIGINT NOT NULL,
+    role_id     BIGINT NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
