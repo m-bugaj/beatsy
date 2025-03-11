@@ -10,11 +10,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user_account")
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,9 +32,9 @@ public class User {
     private String lastName;
 
     @OneToMany(
-            mappedBy = "user"
+            mappedBy = "userAccount"
     )
-    private Set<UserRoles> userRoles = new HashSet<>();
+    private Set<UserRole> userRole = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

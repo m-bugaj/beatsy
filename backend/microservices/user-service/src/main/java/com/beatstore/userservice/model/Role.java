@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "role")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class Role {
     @OneToMany(
             mappedBy = "role"
     )
-    private Set<UserRoles> userRoles = new HashSet<>();
+    private Set<UserRole> userRole = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
