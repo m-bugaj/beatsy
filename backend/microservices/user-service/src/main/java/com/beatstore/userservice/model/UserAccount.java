@@ -38,4 +38,12 @@ public class UserAccount {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public UserAccount(String username, String email, String password_hash, String firstName, String lastName) {
+        this.username = username;
+        this.email = email;
+        this.password_hash = password_hash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
