@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -25,8 +27,8 @@ public class UserAccount {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password_hash;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
     private String firstName;
     private String lastName;
@@ -36,13 +38,17 @@ public class UserAccount {
     )
     private Set<UserRole> userRole = new HashSet<>();
 
+//    @CreationTimestamp
     private LocalDateTime createdAt;
+
+//    @UpdateTimestamp
+//    @Column(updatable = false)
     private LocalDateTime modifiedAt;
 
-    public UserAccount(String username, String email, String password_hash, String firstName, String lastName) {
+    public UserAccount(String username, String email, String passwordHash, String firstName, String lastName) {
         this.username = username;
         this.email = email;
-        this.password_hash = password_hash;
+        this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
     }
