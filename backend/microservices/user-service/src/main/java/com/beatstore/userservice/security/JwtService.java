@@ -1,6 +1,7 @@
-package com.beatstore.userservice.util;
+package com.beatstore.userservice.security;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,10 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtService {
 
-    private final String secretKey = "kfnjerfnj4f3nj4u5847g03573gh53gb43b";
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
