@@ -7,18 +7,14 @@ import com.beatstore.userservice.model.RefreshToken;
 import com.beatstore.userservice.model.UserAccount;
 import com.beatstore.userservice.repository.RefreshTokenRepository;
 import com.beatstore.userservice.repository.UserAccountRepository;
-import com.beatstore.userservice.security.CustomUserDetails;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

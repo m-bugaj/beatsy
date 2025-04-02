@@ -2,8 +2,6 @@ package com.beatstore.userservice.controller;
 
 import com.beatstore.userservice.dto.auth.AuthResponse;
 import com.beatstore.userservice.dto.auth.UserDTO;
-import com.beatstore.userservice.model.UserAccount;
-import com.beatstore.userservice.security.CustomUserDetails;
 import com.beatstore.userservice.service.AuthService;
 import com.beatstore.userservice.service.TokenService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;

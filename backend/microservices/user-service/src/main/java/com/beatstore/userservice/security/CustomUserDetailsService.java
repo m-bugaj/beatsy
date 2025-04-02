@@ -36,13 +36,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 //                });
 
         UserAccount userAccount = userAccountRepository.findByUsername(identifier)
-                .or(() -> userAccountRepository.findByEmail(identifier)) // Java Optional - jeśli nie ma po username, szuka po emailu
+                .or(() -> userAccountRepository.findByEmail(identifier)) // jeśli nie ma po username, szuka po emailu
                 .orElseThrow(() -> {
                     log.warn("User not found: {}", identifier);
                     return new UsernameNotFoundException("User not found with username or email: " + identifier);
                 });
 
-        log.info("User found: {}", userAccount.getUsername());  // Logowanie po znalezieniu użytkownika
+        log.info("User found: {}", userAccount.getUsername());
         return new CustomUserDetails(userAccount);
     }
 }
