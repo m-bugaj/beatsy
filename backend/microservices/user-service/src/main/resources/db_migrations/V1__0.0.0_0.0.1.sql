@@ -12,13 +12,25 @@ $$ LANGUAGE plpgsql;
 CREATE TABLE IF NOT EXISTS user_account
 (
     id            BIGSERIAL PRIMARY KEY,
-    username      VARCHAR(255) NOT NULL UNIQUE,
+    username      VARCHAR(255) UNIQUE,
     email         VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255),
     first_name    VARCHAR(255) NOT NULL,
     last_name     VARCHAR(255) NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS refresh_token
+(
+    id            BIGSERIAL PRIMARY KEY,
+    token           VARCHAR(255) UNIQUE,
+    expires         TIMESTAMP NOT NULL UNIQUE,
+    user_account_id    BIGSERIAL NOT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_refresh_token_user FOREIGN KEY (user_account_id) REFERENCES user_account(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS role
@@ -46,6 +58,12 @@ CREATE TABLE IF NOT EXISTS user_role
 CREATE TRIGGER trigger_user_account_modified_at
     BEFORE UPDATE
     ON user_account
+    FOR EACH ROW
+EXECUTE FUNCTION set_modified_at();
+
+CREATE TRIGGER trigger_refresh_token_modified_at
+    BEFORE UPDATE
+    ON refresh_token
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
 

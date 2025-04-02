@@ -1,9 +1,7 @@
 package com.beatstore.userservice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,5 +50,17 @@ public class UserAccount {
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public UserAccount(Long id, String username, String email, String passwordHash, String firstName, String lastName, Set<UserRole> userRole, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userRole = userRole;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 }

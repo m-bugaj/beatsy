@@ -2,7 +2,6 @@ package com.beatstore.userservice.security;
 
 import com.beatstore.userservice.model.UserAccount;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,9 +30,22 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        String username = userAccount.getUsername();
-        log.info("Returning username: {}", username);
-        return username;
+//        String username = userAccount.getUsername();
+        String identifier = (userAccount.getUsername() != null) ? userAccount.getUsername() : userAccount.getEmail();
+        log.info("Returning identifier: {}", identifier);
+        return identifier;
+    }
+
+    public String getEmail() {
+        return userAccount.getEmail();
+    }
+
+    public String getFirstName() {
+        return userAccount.getFirstName();
+    }
+
+    public String getLastName() {
+        return userAccount.getLastName();
     }
 
 //    @Override

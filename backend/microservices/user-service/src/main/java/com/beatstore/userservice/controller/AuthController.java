@@ -1,5 +1,6 @@
 package com.beatstore.userservice.controller;
 
+import com.beatstore.userservice.dto.auth.AuthResponse;
 import com.beatstore.userservice.dto.auth.LoginRequestDTO;
 import com.beatstore.userservice.dto.auth.RegisterRequestDTO;
 import com.beatstore.userservice.service.AuthService;
@@ -30,8 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
-        log.info("Received login request for username: {}", loginRequestDTO.getUsername());
+    public ResponseEntity<AuthResponse> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
+        log.info("Received login request for username: {}", loginRequestDTO.getUsernameOrEmail());
         return ResponseEntity.ok(authService.login(loginRequestDTO));
     }
 }
