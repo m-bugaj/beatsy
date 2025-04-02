@@ -2,6 +2,7 @@ package com.beatstore.userservice.security;
 
 import com.beatstore.userservice.model.UserAccount;
 import com.beatstore.userservice.repository.UserAccountRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,12 +27,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 //    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Trying to load user by username: {}", username);  // Logowanie przed wyszukaniem użytkownika
-        UserAccount userAccount = userAccountRepository.findByUsername(username)
+    @Transactional
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+//        UserAccount userAccount = userAccountRepository.findByUsername(username)
+//                .orElseThrow(() -> {
+//                    log.warn("User not found: {}", username);
+//                    return new UsernameNotFoundException("User not found");
+//                });
+
+        UserAccount userAccount = userAccountRepository.findByUsername(identifier)
+                .or(() -> userAccountRepository.findByEmail(identifier)) // Java Optional - jeśli nie ma po username, szuka po emailu
                 .orElseThrow(() -> {
-                    log.warn("User not found: {}", username);
-                    return new UsernameNotFoundException("User not found");
+                    log.warn("User not found: {}", identifier);
+                    return new UsernameNotFoundException("User not found with username or email: " + identifier);
                 });
 
         log.info("User found: {}", userAccount.getUsername());  // Logowanie po znalezieniu użytkownika
