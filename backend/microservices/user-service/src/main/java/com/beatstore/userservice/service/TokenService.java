@@ -23,7 +23,8 @@ public class TokenService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    private final long jwtExpirationMs = 3600000; // 1 godzina
+    @Value("${jwt.expiration}")
+    private long jwtExpirationMs;
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserAccountRepository userAccountRepository;
