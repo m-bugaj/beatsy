@@ -3,6 +3,7 @@ package com.beatstore.userservice.controller;
 import com.beatstore.userservice.dto.auth.AuthResponse;
 import com.beatstore.userservice.dto.auth.RefreshTokenRequest;
 import com.beatstore.userservice.dto.auth.UserDTO;
+import com.beatstore.userservice.model.UserAccount;
 import com.beatstore.userservice.service.TokenService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +19,14 @@ public class RefreshTokenController {
 
     @PostMapping("/auth/refresh-token")
     public AuthResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        UserDTO user = tokenService.verifyRefreshToken(refreshTokenRequest.getRefreshToken());
-        String newJwtToken = tokenService.generateJwtToken(user);
-        String newRefreshToken = tokenService.generateRefreshToken(user);
+        UserAccount userAccount = tokenService.verifyRefreshToken(refreshTokenRequest.getRefreshToken());
+//        UserDTO user = UserDTO.builder()
+//                .email(userAccount.getEmail())
+//                .firstName(userAccount.getFirstName())
+//                .lastName(userAccount.getLastName())
+//                .build();
+        String newJwtToken = tokenService.generateJwtToken(userAccount);
+        String newRefreshToken = tokenService.generateRefreshToken(userAccount);
 
         return new AuthResponse(newJwtToken, newRefreshToken);
     }

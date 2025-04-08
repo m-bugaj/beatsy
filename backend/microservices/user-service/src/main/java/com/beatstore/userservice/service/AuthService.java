@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -36,19 +38,19 @@ public class AuthService {
     public AuthResponse login(LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDTO.getUsernameOrEmail(),
+                        loginRequestDTO.getIdentifier(),
                         loginRequestDTO.getPassword()
                 )
         );
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserDTO userDTO = new UserDTO(userDetails);
-        String jwtToken = tokenService.generateJwtToken(userDTO);
-        String refreshToken = tokenService.generateRefreshToken(userDTO);
+//        UserDTO userDTO = new UserDTO(userDetails);
+        String jwtToken = tokenService.generateJwtToken(userDetails.getUserAccount());
+        String refreshToken = tokenService.generateRefreshToken(userDetails.getUserAccount());
         log.info("Logged in successfully: {}", userDetails.getUsername());
         return new AuthResponse(jwtToken, refreshToken);
     }
 
-    public UserDTO registerOrUpdateOAuth2User(Map<String, Object> attributes) {
+    public UserAccount registerOrUpdateOAuth2User(Map<String, Object> attributes) {
         String subject = (String) attributes.get("sub"); // Sprawdzać po tym i po mailu czy użytkownik jest już w bazie
         String email = (String) attributes.get("email");
         String name = (String) attributes.get("name");
@@ -60,7 +62,19 @@ public class AuthService {
                 .map(existingUser -> updateExistingUser(existingUser, firstName, lastName))
                 .orElseGet(() -> createNewUser(subject, email, firstName, lastName));
 
-        return toDTO(userAccount);
+        return userAccount;
+//        return toDTO(userAccount);
+    }
+
+    public AuthResponse oAuth2Success(OAuth2AuthenticationToken authentication) {
+        Map<String, Object> attributes = authentication.getPrincipal().getAttributes();
+
+        UserAccount userAccount = registerOrUpdateOAuth2User(attributes);
+
+        String jwtToken = tokenService.generateJwtToken(userAccount);
+        String refreshToken = tokenService.generateRefreshToken(userAccount);
+
+        return new AuthResponse(jwtToken, refreshToken);
     }
 
     private UserAccount updateExistingUser(UserAccount user, String firstName, String lastName) {

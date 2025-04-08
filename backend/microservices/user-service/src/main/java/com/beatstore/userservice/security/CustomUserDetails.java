@@ -48,6 +48,10 @@ public class CustomUserDetails implements UserDetails {
         return userAccount.getLastName();
     }
 
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
 //    @Override
 //    public boolean isAccountNonExpired() {
 //        return UserDetails.super.isAccountNonExpired();

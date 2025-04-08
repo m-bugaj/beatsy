@@ -2,8 +2,11 @@ package com.beatstore.userservice.controller;
 
 import com.beatstore.userservice.dto.auth.AuthResponse;
 import com.beatstore.userservice.dto.auth.UserDTO;
+import com.beatstore.userservice.model.UserAccount;
+import com.beatstore.userservice.security.CustomUserDetails;
 import com.beatstore.userservice.service.AuthService;
 import com.beatstore.userservice.service.TokenService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -20,14 +23,7 @@ public class OAuth2LoginController {
     }
 
     @GetMapping("/auth/oauth2/success")
-    public AuthResponse success(OAuth2AuthenticationToken authentication) {
-        Map<String, Object> attributes = authentication.getPrincipal().getAttributes();
-
-        UserDTO customUserDetails = authService.registerOrUpdateOAuth2User(attributes);
-
-        String jwtToken = tokenService.generateJwtToken(customUserDetails);
-        String refreshToken = tokenService.generateRefreshToken(customUserDetails);
-
-        return new AuthResponse(jwtToken, refreshToken);
+    public ResponseEntity<AuthResponse> success(OAuth2AuthenticationToken authentication) {
+        return ResponseEntity.ok(authService.oAuth2Success(authentication));
     }
 }

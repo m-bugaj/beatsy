@@ -6,11 +6,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class LoginRequestDTO {
-    private String usernameOrEmail;
+    // usernameOrEmail
+    private String identifier;
     private String password;
 
-    public LoginRequestDTO(String usernameOrEmail, String password) {
-        this.usernameOrEmail = usernameOrEmail;
+    public LoginRequestDTO(String identifier, String password) {
+        this.identifier = identifier;
         this.password = password;
     }
 }

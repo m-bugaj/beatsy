@@ -32,7 +32,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
-        log.info("Received login request for username: {}", loginRequestDTO.getUsernameOrEmail());
+        log.info("Received login request for username: {}", loginRequestDTO.getIdentifier());
         return ResponseEntity.ok(authService.login(loginRequestDTO));
     }
 }
