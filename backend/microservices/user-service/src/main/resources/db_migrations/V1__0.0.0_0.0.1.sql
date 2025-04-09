@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS refresh_token
 
 CREATE TABLE IF NOT EXISTS role
 (
-    id          BIGINT PRIMARY KEY,
-    name        VARCHAR(50) UNIQUE NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    name        VARCHAR(255) UNIQUE NOT NULL,
     is_default  BOOLEAN            NOT NULL DEFAULT FALSE,
     created_at  TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS role
 
 CREATE TABLE IF NOT EXISTS user_role
 (
-    id          BIGINT PRIMARY KEY,
+    id          BIGSERIAL PRIMARY KEY,
     user_account_id     BIGINT NOT NULL,
     role_id     BIGINT NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
