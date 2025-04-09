@@ -12,11 +12,12 @@ $$ LANGUAGE plpgsql;
 CREATE TABLE IF NOT EXISTS user_account
 (
     id            BIGSERIAL PRIMARY KEY,
+    user_hash     VARCHAR(255) UNIQUE NOT NULL,
     username      VARCHAR(255) UNIQUE,
-    email         VARCHAR(255) NOT NULL UNIQUE,
+    email         VARCHAR(255)        NOT NULL UNIQUE,
     password_hash VARCHAR(255),
-    first_name    VARCHAR(255) NOT NULL,
-    last_name     VARCHAR(255) NOT NULL,
+    first_name    VARCHAR(255)        NOT NULL,
+    last_name     VARCHAR(255)        NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

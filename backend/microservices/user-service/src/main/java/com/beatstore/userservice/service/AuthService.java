@@ -2,6 +2,7 @@ package com.beatstore.userservice.service;
 
 import com.beatstore.userservice.dto.auth.AuthResponse;
 import com.beatstore.userservice.dto.auth.LoginRequestDTO;
+import com.beatstore.userservice.dto.auth.RegisterRequestDTO;
 import com.beatstore.userservice.dto.auth.UserDTO;
 import com.beatstore.userservice.model.UserAccount;
 import com.beatstore.userservice.repository.UserAccountRepository;
@@ -26,13 +27,15 @@ public class AuthService {
     private final JwtService jwtService;
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenService tokenService;
+    private final UserAccountService userAccountService;
 
-    public AuthService(AuthenticationManager authenticationManager, UserAccountRepository userAccountRepository, JwtService jwtService, CustomUserDetailsService customUserDetailsService, TokenService tokenService) {
+    public AuthService(AuthenticationManager authenticationManager, UserAccountRepository userAccountRepository, JwtService jwtService, CustomUserDetailsService customUserDetailsService, TokenService tokenService, UserAccountService userAccountService) {
         this.authenticationManager = authenticationManager;
         this.userAccountRepository = userAccountRepository;
         this.jwtService = jwtService;
         this.customUserDetailsService = customUserDetailsService;
         this.tokenService = tokenService;
+        this.userAccountService = userAccountService;
     }
 
     public AuthResponse login(LoginRequestDTO loginRequestDTO) {
@@ -84,12 +87,14 @@ public class AuthService {
     }
 
     private UserAccount createNewUser(String subject, String email, String firstName, String lastName) {
-        UserAccount newUser = UserAccount.builder()
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
-        return userAccountRepository.save(newUser);
+        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO(email, firstName, lastName);
+        return userAccountService.registerUser(registerRequestDTO);
+//        UserAccount newUser = UserAccount.builder()
+//                .email(email)
+//                .firstName(firstName)
+//                .lastName(lastName)
+//                .build();
+//        return userAccountRepository.save(newUser);
     }
 
     private UserDTO toDTO(UserAccount user) {

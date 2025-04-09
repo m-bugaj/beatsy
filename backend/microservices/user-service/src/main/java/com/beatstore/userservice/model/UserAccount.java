@@ -18,6 +18,9 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_hash")
+    private String userHash;
+
     @Column(nullable = false, unique = true)
     private String username;
 
@@ -42,7 +45,8 @@ public class UserAccount {
 //    @Column(updatable = false)
     private LocalDateTime modifiedAt;
 
-    public UserAccount(String username, String email, String passwordHash, String firstName, String lastName) {
+    public UserAccount(String userHash, String username, String email, String passwordHash, String firstName, String lastName) {
+        this.userHash = userHash;
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
@@ -50,8 +54,9 @@ public class UserAccount {
         this.lastName = lastName;
     }
 
-    public UserAccount(Long id, String username, String email, String passwordHash, String firstName, String lastName, Set<UserRole> userRole, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, Set<UserRole> userRole, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
+        this.userHash = userHash;
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;

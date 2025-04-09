@@ -21,4 +21,10 @@ public class RegisterRequestDTO {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public RegisterRequestDTO(String email, String firstName, String lastName) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

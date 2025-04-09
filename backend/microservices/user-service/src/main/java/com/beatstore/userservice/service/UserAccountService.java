@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
@@ -15,14 +17,17 @@ public class UserAccountService {
         this.userAccountRepository = userAccountRepository;
     }
 
-    public void registerUser(RegisterRequestDTO registerRequestDTO) {
+    public UserAccount registerUser(RegisterRequestDTO registerRequestDTO) {
         if (userAccountRepository.existsByEmail(registerRequestDTO.getEmail())) {
             throw new RuntimeException("Email already in use!");
         }
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+        String userHash = UUID.randomUUID().toString();
+
         UserAccount userAccount = new UserAccount(
+                userHash,
                 registerRequestDTO.getUsername(),
                 registerRequestDTO.getEmail(),
                 passwordEncoder.encode(registerRequestDTO.getPassword()),
@@ -30,6 +35,6 @@ public class UserAccountService {
                 registerRequestDTO.getLastName()
         );
 
-        userAccountRepository.save(userAccount);
+        return userAccountRepository.save(userAccount);
     }
 }
