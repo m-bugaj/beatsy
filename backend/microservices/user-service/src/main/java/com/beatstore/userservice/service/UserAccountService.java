@@ -33,7 +33,7 @@ public class UserAccountService {
 
         String userHash = UUID.randomUUID().toString();
 
-        Optional<Role> defaultRole = roleRepository.findByRoleName(UserRole.USER);
+        Optional<Role> defaultRole = roleRepository.findByName(UserRole.USER);
         if (defaultRole.isEmpty()) {
             throw new RoleNotFoundException("Role " + UserRole.USER + " not found!");
         }
