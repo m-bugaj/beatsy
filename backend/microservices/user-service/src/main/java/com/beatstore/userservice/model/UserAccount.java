@@ -33,10 +33,9 @@ public class UserAccount {
     private String firstName;
     private String lastName;
 
-    @OneToMany(
-            mappedBy = "userAccount"
-    )
-    private Set<UserRole> userRole = new HashSet<>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
 //    @CreationTimestamp
     private LocalDateTime createdAt;
@@ -45,16 +44,17 @@ public class UserAccount {
 //    @Column(updatable = false)
     private LocalDateTime modifiedAt;
 
-    public UserAccount(String userHash, String username, String email, String passwordHash, String firstName, String lastName) {
+    public UserAccount(String userHash, String username, String email, String passwordHash, String firstName, String lastName, Role role) {
         this.userHash = userHash;
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
     }
 
-    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, Set<UserRole> userRole, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, Role role, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.userHash = userHash;
         this.username = username;
@@ -62,7 +62,7 @@ public class UserAccount {
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userRole = userRole;
+        this.role = role;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }

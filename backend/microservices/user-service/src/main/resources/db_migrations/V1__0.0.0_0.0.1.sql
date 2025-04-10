@@ -8,6 +8,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TABLE IF NOT EXISTS role
+(
+    id          BIGSERIAL PRIMARY KEY,
+    name        VARCHAR(255) UNIQUE NOT NULL,
+    is_default  BOOLEAN            NOT NULL DEFAULT FALSE,
+    created_at  TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS user_account
 (
@@ -18,8 +26,10 @@ CREATE TABLE IF NOT EXISTS user_account
     password_hash VARCHAR(255),
     first_name    VARCHAR(255)        NOT NULL,
     last_name     VARCHAR(255)        NOT NULL,
+    role_id       BIGINT              NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_role FOREIGN KEY (role_id) REFERENCES role (id)
 );
 
 CREATE TABLE IF NOT EXISTS refresh_token
@@ -33,27 +43,6 @@ CREATE TABLE IF NOT EXISTS refresh_token
 
     CONSTRAINT fk_refresh_token_user FOREIGN KEY (user_account_id) REFERENCES user_account(id) ON DELETE CASCADE
 );
-
-CREATE TABLE IF NOT EXISTS role
-(
-    id          BIGSERIAL PRIMARY KEY,
-    name        VARCHAR(255) UNIQUE NOT NULL,
-    is_default  BOOLEAN            NOT NULL DEFAULT FALSE,
-    created_at  TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS user_role
-(
-    id          BIGSERIAL PRIMARY KEY,
-    user_account_id     BIGINT NOT NULL,
-    role_id     BIGINT NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_account_id) REFERENCES user_account (id) ON DELETE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES role (id) ON DELETE CASCADE
-);
-
 
 -- Dodanie triggera do każdej tabeli
 CREATE TRIGGER trigger_user_account_modified_at
@@ -71,11 +60,5 @@ EXECUTE FUNCTION set_modified_at();
 CREATE TRIGGER trigger_role_modified_at
     BEFORE UPDATE
     ON role
-    FOR EACH ROW
-EXECUTE FUNCTION set_modified_at();
-
-CREATE TRIGGER trigger_user_role_modified_at
-    BEFORE UPDATE
-    ON user_role
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();

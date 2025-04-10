@@ -25,10 +25,9 @@ public class Role {
     @Column(nullable = false)
     private Boolean isDefault;
 
-    @OneToMany(
-            mappedBy = "role"
-    )
-    private Set<UserRole> userRole = new HashSet<>();
+    @OneToMany(mappedBy = "role")
+    private Set<UserAccount> users = new HashSet<>();
+
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
