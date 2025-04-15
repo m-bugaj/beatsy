@@ -1,4 +1,9 @@
+#uruchom kontener:
 #  docker-compose -f docker-compose.dev.yml up -d
+
+#  usuwanie:
+#  docker-compose -f docker-compose.dev.yml down -v
+
 services:
   postgres:
     image: postgres:17
