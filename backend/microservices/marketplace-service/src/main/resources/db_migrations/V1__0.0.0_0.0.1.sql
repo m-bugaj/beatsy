@@ -94,14 +94,14 @@ CREATE TABLE licenses
     CONSTRAINT fk_license_license_limit_config FOREIGN KEY (license_limit_config_id) REFERENCES license_limit_config (id)
 );
 
-CREATE SEQUENCE beat_license_seq;
+CREATE SEQUENCE beat_license_id_seq;
 
-ALTER SEQUENCE beat_license_seq
+ALTER SEQUENCE beat_license_id_seq
     OWNER TO admin;
 
 CREATE TABLE beat_license
 (
-    id           BIGINT    DEFAULT NEXTVAL('beat_license_seq'::regclass) PRIMARY KEY,
+    id           BIGINT    DEFAULT NEXTVAL('beat_license_id_seq'::regclass) PRIMARY KEY,
     beat_id      BIGINT NOT NULL,
     license_id   BIGINT NOT NULL,
     custom_price NUMERIC(10, 2),
