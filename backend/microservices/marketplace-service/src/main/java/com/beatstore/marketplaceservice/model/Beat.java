@@ -49,6 +49,9 @@ public class Beat {
     @OneToMany(mappedBy = "beat")
     private Set<MediaFile> mediaFiles = new HashSet<>();
 
+    @OneToMany(mappedBy = "beat")
+    private Set<BeatLicense> beatLicenses = new HashSet<>();
+
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }
