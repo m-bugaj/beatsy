@@ -27,6 +27,9 @@ public class License {
     private Long id;
 
     @Column(nullable = false)
+    private String hash;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
