@@ -85,6 +85,7 @@ ALTER SEQUENCE licenses_id_seq
 CREATE TABLE licenses
 (
     id                      BIGINT    DEFAULT NEXTVAL('licenses_id_seq'::regclass) PRIMARY KEY,
+    hash                    VARCHAR(255)   NOT NULL,
     name                    VARCHAR(255)   NOT NULL,
     default_price           NUMERIC(10, 2) NOT NULL,
     user_hash               VARCHAR(255)   NOT NULL,
