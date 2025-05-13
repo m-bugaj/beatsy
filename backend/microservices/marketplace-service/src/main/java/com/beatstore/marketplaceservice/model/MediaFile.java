@@ -29,9 +29,7 @@ public class MediaFile {
     private FileType fileType;
 
     private String fileUrl;
-
-    @Enumerated(EnumType.STRING)
-    private MimeType mimeType;
+    private String mimeType;
 
     private Integer fileSize;
     private LocalDateTime uploadedAt;
