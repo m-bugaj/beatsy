@@ -2,6 +2,7 @@ package com.beatstore.marketplaceservice.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "beat_license")
 @Getter
 @Setter
+@NoArgsConstructor
 public class BeatLicense {
     @Id
     @SequenceGenerator(
@@ -44,4 +46,10 @@ public class BeatLicense {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public BeatLicense(Beat beat, License license, BigDecimal customPrice) {
+        this.beat = beat;
+        this.license = license;
+        this.customPrice = customPrice;
+    }
 }

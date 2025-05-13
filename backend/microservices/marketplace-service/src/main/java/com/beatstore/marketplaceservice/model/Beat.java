@@ -1,8 +1,8 @@
 package com.beatstore.marketplaceservice.model;
 
+import com.beatstore.marketplaceservice.dto.BeatUploadDTO;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -12,6 +12,9 @@ import java.util.Set;
 @Table(name = "beats")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Beat {
     @Id
     @SequenceGenerator(
@@ -54,4 +57,14 @@ public class Beat {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public Beat(BeatUploadDTO beatUploadDTO) {
+        this.userHash = beatUploadDTO.getUserHash();
+        this.title = beatUploadDTO.getTitle();
+        this.description = beatUploadDTO.getDescription();
+        this.bpm = beatUploadDTO.getBpm();
+        this.genre = beatUploadDTO.getGenre();
+        this.mood = beatUploadDTO.getMood();
+        this.visibility = beatUploadDTO.getVisibility();
+    }
 }
