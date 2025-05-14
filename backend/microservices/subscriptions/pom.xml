@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.beatstore</groupId>
-	<artifactId>subscription</artifactId>
+	<artifactId>subscriptions</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>subscription</name>
-	<description>subscription</description>
+	<name>subscriptions</name>
+	<description>subscriptions</description>
 	<url/>
 	<licenses>
 		<license/>

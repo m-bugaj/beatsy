@@ -1,4 +1,4 @@
-package com.beatstore.subscription;
+package com.beatstore.subscriptions;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
