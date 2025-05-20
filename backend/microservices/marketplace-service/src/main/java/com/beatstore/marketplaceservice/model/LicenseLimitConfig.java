@@ -1,5 +1,6 @@
 package com.beatstore.marketplaceservice.model;
 
+import com.beatstore.marketplaceservice.dto.LicenseDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,4 +47,18 @@ public class LicenseLimitConfig {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public LicenseLimitConfig(LicenseDTO licenseDTO) {
+        this.streamLimit = licenseDTO.getStreamLimit();
+        this.physicalSalesLimit = licenseDTO.getPhysicalSalesLimit();
+        this.allowMp3Download = licenseDTO.getAllowMp3Download();
+        this.allowWavDownload = licenseDTO.getAllowWavDownload();
+        this.allowStemsDownload = licenseDTO.getAllowStemsDownload();
+        this.allowLivePerformance = licenseDTO.getAllowLivePerformance();
+        this.allowBroadcast = licenseDTO.getAllowBroadcast();
+        this.allowYtMonetization = licenseDTO.getAllowYtMonetization();
+        this.useInPaidAds = licenseDTO.getUseInPaidAds();
+        this.useInVideoProjects = licenseDTO.getUseInVideoProjects();
+        this.licenseDurationMonths = licenseDTO.getLicenseDurationMonths();
+    }
 }

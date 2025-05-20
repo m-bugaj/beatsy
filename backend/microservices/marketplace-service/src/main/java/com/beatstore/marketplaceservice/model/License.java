@@ -1,8 +1,7 @@
 package com.beatstore.marketplaceservice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,6 +12,9 @@ import java.util.Set;
 @Table(name = "licenses")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class License {
     @Id
     @SequenceGenerator(
@@ -38,7 +40,7 @@ public class License {
     @Column(nullable = false)
     private String userHash;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(
             name = "license_limit_config_id",
             referencedColumnName = "id",
