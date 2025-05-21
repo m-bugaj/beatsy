@@ -17,9 +17,14 @@ CREATE TABLE IF NOT EXISTS role
     modified_at TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE user_account_id_seq;
+
+ALTER SEQUENCE user_account_id_seq
+    OWNER TO admin;
+
 CREATE TABLE IF NOT EXISTS user_account
 (
-    id            BIGSERIAL PRIMARY KEY,
+    id            BIGINT    DEFAULT NEXTVAL('user_account_id_seq'::regclass) PRIMARY KEY,
     user_hash     VARCHAR(255) UNIQUE NOT NULL,
     username      VARCHAR(255) UNIQUE,
     email         VARCHAR(255)        NOT NULL UNIQUE,
@@ -44,6 +49,28 @@ CREATE TABLE IF NOT EXISTS refresh_token
     CONSTRAINT fk_refresh_token_user FOREIGN KEY (user_account_id) REFERENCES user_account(id) ON DELETE CASCADE
 );
 
+CREATE SEQUENCE user_session_id_seq;
+
+ALTER SEQUENCE user_session_id_seq
+    OWNER TO admin;
+
+CREATE TABLE user_session
+(
+    id                BIGINT    DEFAULT NEXTVAL('user_session_id_seq'::regclass) PRIMARY KEY,
+    user_id           BIGINT                              NOT NULL,
+    user_hash         VARCHAR(255)                        NOT NULL,
+    subscription_hash VARCHAR(255),
+    ip_address        VARCHAR(255),
+    user_agent        VARCHAR(512),
+    last_activity     TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    expires_at        TIMESTAMP                           NOT NULL,
+    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user FOREIGN KEY (user_id)
+        REFERENCES user_account (id)
+        ON DELETE CASCADE
+);
+
 -- Dodanie triggera do każdej tabeli
 CREATE TRIGGER trigger_user_account_modified_at
     BEFORE UPDATE
@@ -60,5 +87,11 @@ EXECUTE FUNCTION set_modified_at();
 CREATE TRIGGER trigger_role_modified_at
     BEFORE UPDATE
     ON role
+    FOR EACH ROW
+EXECUTE FUNCTION set_modified_at();
+
+CREATE TRIGGER trigger_user_session_modified_at
+    BEFORE UPDATE
+    ON user_session
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
