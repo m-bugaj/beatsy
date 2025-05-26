@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "user_account")
@@ -37,6 +35,9 @@ public class UserAccount {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private UserSession userSession;
+
 //    @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -63,6 +64,20 @@ public class UserAccount {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
+
+    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, Role role, UserSession userSession, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.userHash = userHash;
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.userSession = userSession;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
