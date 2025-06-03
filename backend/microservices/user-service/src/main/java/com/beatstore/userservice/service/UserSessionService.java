@@ -29,7 +29,9 @@ public class UserSessionService {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    private void refreshSession(UserSession session, String ipAddress, String userAgent) {
+    private void refreshSession(UserSession session, HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        String ipAddress = extractClientIp(request);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiresAt = now.plusDays(sessionExpirationPeriod);
         session.setExpiresAt(expiresAt);
@@ -45,9 +47,7 @@ public class UserSessionService {
         if (session.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new UserSessionExpired(userHash);
         }
-        String userAgent = request.getHeader("User-Agent");
-        String ipAddress = extractClientIp(request);
-        refreshSession(session, ipAddress, userAgent);
+        refreshSession(session, request);
     }
 
     private String extractClientIp(HttpServletRequest request) {
