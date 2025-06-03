@@ -35,7 +35,7 @@ public class UserAccount {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserSession userSession;
 
 //    @CreationTimestamp

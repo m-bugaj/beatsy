@@ -26,6 +26,7 @@ public class UserSession {
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private UserAccount userAccount;
 
     private String userHash;
