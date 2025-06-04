@@ -9,6 +9,7 @@ import com.beatstore.userservice.repository.UserAccountRepository;
 import com.beatstore.userservice.security.CustomUserDetails;
 import com.beatstore.userservice.security.CustomUserDetailsService;
 import com.beatstore.userservice.security.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,17 +29,19 @@ public class AuthService {
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenService tokenService;
     private final UserAccountService userAccountService;
+    private final UserSessionService userSessionService;
 
-    public AuthService(AuthenticationManager authenticationManager, UserAccountRepository userAccountRepository, JwtService jwtService, CustomUserDetailsService customUserDetailsService, TokenService tokenService, UserAccountService userAccountService) {
+    public AuthService(AuthenticationManager authenticationManager, UserAccountRepository userAccountRepository, JwtService jwtService, CustomUserDetailsService customUserDetailsService, TokenService tokenService, UserAccountService userAccountService, UserSessionService userSessionService) {
         this.authenticationManager = authenticationManager;
         this.userAccountRepository = userAccountRepository;
         this.jwtService = jwtService;
         this.customUserDetailsService = customUserDetailsService;
         this.tokenService = tokenService;
         this.userAccountService = userAccountService;
+        this.userSessionService = userSessionService;
     }
 
-    public AuthResponse login(LoginRequestDTO loginRequestDTO) {
+    public AuthResponse login(HttpServletRequest request, LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDTO.getIdentifier(),
@@ -49,6 +52,7 @@ public class AuthService {
 //        UserDTO userDTO = new UserDTO(userDetails);
         String jwtToken = tokenService.generateJwtToken(userDetails.getUserAccount());
         String refreshToken = tokenService.generateRefreshToken(userDetails.getUserAccount());
+        userSessionService.validateAndRefreshSessionOrThrow(userDetails.getUserAccount().getUserHash(), request);
         log.info("Logged in successfully: {}", userDetails.getUsername());
         return new AuthResponse(jwtToken, refreshToken);
     }

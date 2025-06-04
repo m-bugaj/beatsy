@@ -5,6 +5,7 @@ import com.beatstore.userservice.dto.auth.LoginRequestDTO;
 import com.beatstore.userservice.dto.auth.RegisterRequestDTO;
 import com.beatstore.userservice.service.AuthService;
 import com.beatstore.userservice.service.UserAccountService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +32,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<AuthResponse> loginUser(
+            HttpServletRequest request,
+            @RequestBody LoginRequestDTO loginRequestDTO
+    ) {
         log.info("Received login request for username: {}", loginRequestDTO.getIdentifier());
-        return ResponseEntity.ok(authService.login(loginRequestDTO));
+        return ResponseEntity.ok(authService.login(request, loginRequestDTO));
     }
 }
