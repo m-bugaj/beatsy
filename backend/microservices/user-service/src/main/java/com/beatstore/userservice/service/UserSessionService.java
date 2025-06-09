@@ -41,6 +41,14 @@ public class UserSessionService {
         userSessionRepository.save(session);
     }
 
+    public void createSession(UserAccount userAccount, HttpServletRequest request) {
+        clearSession(userAccount.getUserHash());
+        UserSession session = new UserSession();
+//        session.setUserAccount(userAccount);
+        session.setUserHash(userAccount.getUserHash());
+        refreshSession(session, request);
+    }
+
     public void validateAndRefreshSessionOrThrow(String userHash, HttpServletRequest request) {
         UserSession session = userSessionRepository.findByUserHash(userHash)
                 .orElseThrow(() -> new UserSessionNotFound(userHash));
@@ -48,6 +56,11 @@ public class UserSessionService {
             throw new UserSessionExpired(userHash);
         }
         refreshSession(session, request);
+    }
+
+    private void clearSession(String userHash) {
+        Optional<UserSession> oldSession = userSessionRepository.findByUserHash(userHash);
+        oldSession.ifPresent(userSessionRepository::delete);
     }
 
     private String extractClientIp(HttpServletRequest request) {

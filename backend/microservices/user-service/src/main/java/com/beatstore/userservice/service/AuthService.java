@@ -52,7 +52,7 @@ public class AuthService {
 //        UserDTO userDTO = new UserDTO(userDetails);
         String jwtToken = tokenService.generateJwtToken(userDetails.getUserAccount());
         String refreshToken = tokenService.generateRefreshToken(userDetails.getUserAccount());
-        userSessionService.validateAndRefreshSessionOrThrow(userDetails.getUserAccount().getUserHash(), request);
+        userSessionService.createSession(userDetails.getUserAccount(), request);
         log.info("Logged in successfully: {}", userDetails.getUsername());
         return new AuthResponse(jwtToken, refreshToken);
     }
