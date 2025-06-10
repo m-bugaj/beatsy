@@ -8,6 +8,7 @@ import com.beatstore.marketplaceservice.model.LicenseLimitConfig;
 import com.beatstore.marketplaceservice.repository.BeatLicenseRepository;
 import com.beatstore.marketplaceservice.repository.BeatRepository;
 import com.beatstore.marketplaceservice.repository.LicenseRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,10 @@ public class LicenseService {
         this.beatLicenseRepository = beatLicenseRepository;
         this.beatRepository = beatRepository;
     }
-
+    // W PZYSZŁOŚCI DODAĆ OBSŁUGĘ LIMITÓW (NP MAX 4 LICENCJE NA UŻYTKOWNIKA I DODANIE 5 MA RZUCIĆ BŁĘDEM)
+    @Transactional
     public void createLicense(LicenseDTO licenseDTO) {
         log.info("Creating license for userHash: {}", licenseDTO.getUserHash());
-
         LicenseLimitConfig licenseLimitConfig = new LicenseLimitConfig(licenseDTO);
         License license = License.builder()
                 .name(licenseDTO.getName())
@@ -41,9 +42,7 @@ public class LicenseService {
                 .hash(UUID.randomUUID().toString())
                 .build();
         licenseRepository.save(license);
-
         log.info("License saved with hash: {}", license.getHash());
-
         applyLicenseToAllBeatsIfRequested(licenseDTO.getUserHash(), licenseDTO.getApplyToAllBeats(), license);
     }
 
