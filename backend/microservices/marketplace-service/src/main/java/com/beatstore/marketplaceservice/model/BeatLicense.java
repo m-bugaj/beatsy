@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "beat_license")
@@ -50,6 +51,8 @@ public class BeatLicense {
     public BeatLicense(Beat beat, License license, BigDecimal customPrice) {
         this.beat = beat;
         this.license = license;
-        this.customPrice = customPrice;
+        if (Objects.nonNull(customPrice)) {
+            this.customPrice = customPrice;
+        }
     }
 }
