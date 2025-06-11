@@ -21,6 +21,7 @@ public class LicenseController {
 
     @PostMapping
     public ResponseEntity<Void> createLicense(@RequestBody LicenseDTO licenseDTO) {
+        //TODO: userHash z sesji wyciagac do dto
         licenseService.createLicense(licenseDTO);
         return ResponseEntity.ok().build();
     }

@@ -29,7 +29,7 @@ public class LicenseService {
         this.beatLicenseRepository = beatLicenseRepository;
         this.beatRepository = beatRepository;
     }
-    // W PZYSZŁOŚCI DODAĆ OBSŁUGĘ LIMITÓW (NP MAX 4 LICENCJE NA UŻYTKOWNIKA I DODANIE 5 MA RZUCIĆ BŁĘDEM)
+    //TODO: W PZYSZŁOŚCI DODAĆ OBSŁUGĘ LIMITÓW (NP MAX 4 LICENCJE NA UŻYTKOWNIKA I DODANIE 5 MA RZUCIĆ BŁĘDEM)
     @Transactional
     public void createLicense(LicenseDTO licenseDTO) {
         log.info("Creating license for userHash: {}", licenseDTO.getUserHash());
