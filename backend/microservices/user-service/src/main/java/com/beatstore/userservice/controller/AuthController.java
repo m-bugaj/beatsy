@@ -3,7 +3,7 @@ package com.beatstore.userservice.controller;
 import com.beatstore.userservice.dto.auth.AuthResponse;
 import com.beatstore.userservice.dto.auth.LoginRequestDTO;
 import com.beatstore.userservice.dto.auth.RegisterRequestDTO;
-import com.beatstore.userservice.service.AuthService;
+import com.beatstore.userservice.security.AuthService;
 import com.beatstore.userservice.service.UserAccountService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
