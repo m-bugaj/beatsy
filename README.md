@@ -19,6 +19,8 @@
 - New `subscriptions` microservice for managing monthly billing and paid plans
 - `role-permission` microservice with fine-grained access control via `@PreAuthorize`
 - Additional marketplace features: beat editing, license purchases, search functionality
+- Implement proper security headers to protect against XSS (e.g., Content-Security-Policy)
+- Add CSRF protection using techniques
 
 ---
 
