@@ -22,6 +22,7 @@
 - Implement proper security headers to protect against XSS (e.g., Content-Security-Policy)
 - Add CSRF protection using techniques
 - Add JWT signature verification for every request that requires authorization
+- Add RequestContext extraction from JWT per request
 
 ---
 
