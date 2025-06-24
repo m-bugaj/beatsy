@@ -19,6 +19,11 @@
 - New `subscriptions` microservice for managing monthly billing and paid plans
 - `role-permission` microservice with fine-grained access control via `@PreAuthorize`
 - Additional marketplace features: beat editing, license purchases, search functionality
+- Implement proper security headers to protect against XSS (e.g., Content-Security-Policy)
+- Add CSRF protection using techniques
+- Add JWT signature verification for every request that requires authorization
+- Add RequestContext extraction from JWT per request
+- Add Redis-based JWT blacklist: Store invalidated JWTs in Redis with TTL matching token expiry. On each request, reject tokens found in the blacklist.
 
 ---
 
