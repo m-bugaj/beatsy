@@ -23,21 +23,21 @@ public class RefreshTokenController {
         this.userSessionService = userSessionService;
     }
 
-    @PostMapping("/auth/refresh-token")
-    public AuthResponse refreshToken(
-            HttpServletRequest request,
-            @RequestBody RefreshTokenRequest refreshTokenRequest
-    ) {
-        UserAccount userAccount = refreshTokenService.verifyRefreshToken(refreshTokenRequest.getRefreshToken());
-//        UserDTO user = UserDTO.builder()
-//                .email(userAccount.getEmail())
-//                .firstName(userAccount.getFirstName())
-//                .lastName(userAccount.getLastName())
-//                .build();
-        String newJwtToken = jwtService.generateToken(userAccount);
-        String newRefreshToken = refreshTokenService.generateRefreshToken(userAccount);
-        userSessionService.validateAndRefreshSessionOrThrow(userAccount.getUserHash(), request);
-
-        return new AuthResponse(newJwtToken, newRefreshToken);
-    }
+//    @PostMapping("/auth/refresh-token")
+//    public AuthResponse refreshToken(
+//            HttpServletRequest request,
+//            @RequestBody RefreshTokenRequest refreshTokenRequest
+//    ) {
+//        UserAccount userAccount = refreshTokenService.verifyRefreshToken(refreshTokenRequest.getRefreshToken());
+////        UserDTO user = UserDTO.builder()
+////                .email(userAccount.getEmail())
+////                .firstName(userAccount.getFirstName())
+////                .lastName(userAccount.getLastName())
+////                .build();
+//        String newJwtToken = jwtService.generateToken(userAccount);
+//        String newRefreshToken = refreshTokenService.generateRefreshToken(userAccount);
+//        userSessionService.validateAndRefreshSessionOrThrow(userAccount.getUserHash(), request);
+//
+//        return new AuthResponse(newJwtToken, newRefreshToken);
+//    }
 }

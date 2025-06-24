@@ -7,6 +7,7 @@ import com.beatstore.userservice.security.AuthService;
 import com.beatstore.userservice.service.UserAccountService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,11 +33,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginUser(
+    public ResponseEntity<String> loginUser(
             HttpServletRequest request,
             @RequestBody LoginRequestDTO loginRequestDTO
     ) {
         log.info("Received login request for username: {}", loginRequestDTO.getIdentifier());
-        return ResponseEntity.ok(authService.login(request, loginRequestDTO));
+        AuthResponse authResponse = authService.login(request, loginRequestDTO);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, authResponse.getCookie().toString())
+                .body("Login successful");
     }
 }

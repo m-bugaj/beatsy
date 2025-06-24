@@ -10,12 +10,14 @@ import com.beatstore.userservice.service.UserAccountService;
 import com.beatstore.userservice.service.UserSessionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
@@ -50,9 +52,10 @@ public class AuthService {
 //        UserDTO userDTO = new UserDTO(userDetails);
         String jwtToken = jwtService.generateToken(userDetails.getUserAccount());
         String refreshToken = refreshTokenService.generateRefreshToken(userDetails.getUserAccount());
+        ResponseCookie cookie = createJwtCookie(jwtToken);
         userSessionService.createSession(userDetails.getUserAccount(), request);
         log.info("Logged in successfully: {}", userDetails.getUsername());
-        return new AuthResponse(jwtToken, refreshToken);
+        return new AuthResponse(jwtToken, refreshToken, cookie);
     }
 
     public UserAccount registerOrUpdateOAuth2User(Map<String, Object> attributes) {
@@ -78,8 +81,19 @@ public class AuthService {
 
         String jwtToken = jwtService.generateToken(userAccount);
         String refreshToken = refreshTokenService.generateRefreshToken(userAccount);
+        ResponseCookie cookie = createJwtCookie(jwtToken);
 
-        return new AuthResponse(jwtToken, refreshToken);
+        return new AuthResponse(jwtToken, refreshToken, cookie);
+    }
+
+    // TODO: max age ciasteczka przenieść do konfiguracji
+    private ResponseCookie createJwtCookie(String token) {
+        return ResponseCookie.from("jwt", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofHours(1))
+                .build();
     }
 
     private UserAccount updateExistingUser(UserAccount user, String firstName, String lastName) {
