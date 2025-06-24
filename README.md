@@ -23,6 +23,7 @@
 - Add CSRF protection using techniques
 - Add JWT signature verification for every request that requires authorization
 - Add RequestContext extraction from JWT per request
+- Add Redis-based JWT blacklist: Store invalidated JWTs in Redis with TTL matching token expiry. On each request, reject tokens found in the blacklist.
 
 ---
 
