@@ -1,4 +1,4 @@
-package com.beatstore.userservice.config;
+package com.beatstore.userservice.security.config;
 
 import com.beatstore.userservice.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;

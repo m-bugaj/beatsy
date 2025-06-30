@@ -1,4 +1,4 @@
-package com.beatstore.userservice.config;
+package com.beatstore.userservice.security.config;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JwtConfig {
 
-    @Value("${jwt.secret-key}")
+    @Value("${wt.secret-key}")
     private String secret;
 
     @Bean
