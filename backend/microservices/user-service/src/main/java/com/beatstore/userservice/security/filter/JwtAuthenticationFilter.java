@@ -1,4 +1,4 @@
-package com.beatstore.userservice.context;
+package com.beatstore.userservice.security.filter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -9,8 +9,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,15 +21,13 @@ import java.util.Collections;
 import java.util.Objects;
 
 @Component
-@Slf4j
-public class JwtRequestProcessingFilter extends OncePerRequestFilter {
+@Order(1)
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final RequestContext requestContext;
     private final JwtService jwtService;
 
     @Autowired
-    public JwtRequestProcessingFilter(RequestContext requestContext, JwtService jwtService) {
-        this.requestContext = requestContext;
+    public JwtAuthenticationFilter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
 
@@ -52,15 +50,10 @@ public class JwtRequestProcessingFilter extends OncePerRequestFilter {
             try {
                 DecodedJWT jwt = jwtService.verifyToken(jwtToken);
 
-                requestContext.setUsername(jwt.getSubject());
-                requestContext.setUserHash(jwt.getClaim("userHash").asString());
-//                requestContext.setRole(jwt.getClaim("role").asString());
-//                requestContext.setSubscriptionHash(jwt.getClaim("subscriptionHash").asString());
-
                 // TODO: Tutaj w przyszłości należy zadbać o role użytkownika (trzeci argument)
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(
-                                jwt.getSubject(), null, Collections.emptyList())
+                                jwt, null, Collections.emptyList())
                 );
 
             } catch (JWTVerificationException ex) {
