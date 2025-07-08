@@ -21,6 +21,9 @@
 - Additional marketplace features: beat editing, license purchases, search functionality
 - Implement proper security headers to protect against XSS (e.g., Content-Security-Policy)
 - Add CSRF protection using techniques
+- Introduce an API Gateway layer to centralize authentication and authorization logic, ensuring that only authorized requests reach downstream services
+- Use a modern, widely adopted gateway solution such as Spring Cloud Gateway (recommended for Spring-based apps), instead of the older Netflix Zuul
+- Configure the gateway to perform pre-filtering of incoming requests
 - Add JWT signature verification for every request that requires authorization
 - Add RequestContext extraction from JWT per request
 - Add Redis-based JWT blacklist: Store invalidated JWTs in Redis with TTL matching token expiry. On each request, reject tokens found in the blacklist.
