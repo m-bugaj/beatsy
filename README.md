@@ -4,6 +4,21 @@
 
 ### ✅ Implemented Features:
 
+#### 🌐 `api-gateway-web`:
+- Centralized routing using Spring Cloud Gateway (WebFlux)
+
+- Reactive stack with Spring WebFlux
+
+- Routes for microservices defined in application.properties
+
+- Route forwarding with path rewriting using RewritePath
+
+- CORS configuration allowing cross-origin requests from the frontend (to be restricted later)
+
+- CSRF protection enabled (important due to use of JWT in HttpOnly cookies)
+
+- Eureka client integration for service discovery (lb://SERVICE-NAME URI)
+
 #### 🔐 `user-service`:
 - User registration and login
 - Google OAuth2 authentication
