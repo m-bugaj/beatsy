@@ -23,6 +23,7 @@
 - User registration and login
 - Google OAuth2 authentication
 - JWT authentication (access and refresh tokens)
+- RSA256 signing for JWT
 
 #### 🛒 `marketplace-service`:
 - Beat file upload (MP3, WAV, STEMS)
