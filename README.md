@@ -18,6 +18,8 @@
 - CSRF protection enabled (important due to use of JWT in HttpOnly cookies)
 
 - Eureka client integration for service discovery (lb://SERVICE-NAME URI)
+  
+- Per-request JWT verification using RSA256 public key in API Gateway for secure authentication
 
 #### 🔐 `user-service`:
 - User registration and login
