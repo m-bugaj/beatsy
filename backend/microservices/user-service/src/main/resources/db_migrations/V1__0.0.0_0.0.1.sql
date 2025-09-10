@@ -31,10 +31,24 @@ CREATE TABLE IF NOT EXISTS user_account
     password_hash VARCHAR(255),
     first_name    VARCHAR(255)        NOT NULL,
     last_name     VARCHAR(255)        NOT NULL,
-    role_id       BIGINT              NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE SEQUENCE user_role_id_seq;
+
+ALTER SEQUENCE user_role_id_seq
+    OWNER TO admin;
+
+CREATE TABLE IF NOT EXISTS user_role
+(
+    id            BIGINT    DEFAULT NEXTVAL('user_role_id_seq'::regclass) PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    created_at    TIMESTAMP DEFAULT now(),
     modified_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_user_role FOREIGN KEY (role_id) REFERENCES role (id)
+    CONSTRAINT fk_user_role_user FOREIGN KEY (user_id) REFERENCES user_account (id),
+    CONSTRAINT fk_user_role_role FOREIGN KEY (role_id) REFERENCES role (id)
 );
 
 CREATE TABLE IF NOT EXISTS refresh_token
