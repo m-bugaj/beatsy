@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.beatstore.userservice.model.UserAccount;
+import com.beatstore.userservice.model.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class JwtService {
         return JWT.create()
                 .withSubject(userAccount.getUsername())
                 .withClaim("userHash", userAccount.getUserHash())
+                .withClaim("roles", userAccount.getUserRoles().stream()
+                        .map(UserRole::getRole)
+                        .toList())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .sign(algorithm);
