@@ -1,7 +1,7 @@
 package com.beatstore.userservice.service;
 
 import com.beatstore.userservice.dto.auth.RegisterRequestDTO;
-import com.beatstore.userservice.enums.UserRole;
+import com.beatstore.userservice.enums.UserRoleName;
 import com.beatstore.userservice.exception.RoleNotFoundException;
 import com.beatstore.userservice.model.Role;
 import com.beatstore.userservice.model.UserAccount;
@@ -11,8 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserAccountService {
@@ -33,9 +33,9 @@ public class UserAccountService {
 
         String userHash = UUID.randomUUID().toString();
 
-        Optional<Role> defaultRole = roleRepository.findByName(UserRole.USER);
-        if (defaultRole.isEmpty()) {
-            throw new RoleNotFoundException("Role " + UserRole.USER + " not found!");
+        Set<Role> defaultRoles = roleRepository.findAllByNameIn(UserRoleName.getDefaultRoles());
+        if (Objects.isNull(defaultRoles) || defaultRoles.isEmpty()) {
+            throw new RoleNotFoundException("Roles " + UserRoleName.getDefaultRoles() + " not found!");
         }
 
         UserAccount userAccount = new UserAccount(
@@ -45,7 +45,7 @@ public class UserAccountService {
                 passwordEncoder.encode(registerRequestDTO.getPassword()),
                 registerRequestDTO.getFirstName(),
                 registerRequestDTO.getLastName(),
-                defaultRole.get()
+                defaultRoles
         );
 
         return userAccountRepository.save(userAccount);
