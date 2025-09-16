@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_account")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserAccount {
     @Id
@@ -31,31 +34,29 @@ public class UserAccount {
     private String firstName;
     private String lastName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @OneToMany(
+            mappedBy = "userAccount",
+            cascade = CascadeType.ALL
+    )
+    private Set<UserRole> userRoles = new HashSet<>();
 
     @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserSession userSession;
 
-//    @CreationTimestamp
     private LocalDateTime createdAt;
-
-//    @UpdateTimestamp
-//    @Column(updatable = false)
     private LocalDateTime modifiedAt;
 
-    public UserAccount(String userHash, String username, String email, String passwordHash, String firstName, String lastName, Role role) {
+    public UserAccount(String userHash, String username, String email, String passwordHash, String firstName, String lastName, Set<Role> roles) {
         this.userHash = userHash;
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
+        roles.forEach(role -> userRoles.add(new UserRole(this, role)));
     }
 
-    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, Role role, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.userHash = userHash;
         this.username = username;
@@ -63,12 +64,11 @@ public class UserAccount {
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
-    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, Role role, UserSession userSession, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UserAccount(Long id, String userHash, String username, String email, String passwordHash, String firstName, String lastName, UserSession userSession, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.userHash = userHash;
         this.username = username;
@@ -76,7 +76,6 @@ public class UserAccount {
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
         this.userSession = userSession;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
