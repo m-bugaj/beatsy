@@ -82,7 +82,8 @@ CREATE TABLE user_session
     modified_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user FOREIGN KEY (user_id)
         REFERENCES user_account (id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT unique_user UNIQUE (user_id)
 );
 
 -- Dodanie triggera do każdej tabeli
