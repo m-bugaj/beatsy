@@ -33,7 +33,7 @@ public class JwtService {
                 .withSubject(userAccount.getUsername())
                 .withClaim("userHash", userAccount.getUserHash())
                 .withClaim("roles", userAccount.getUserRoles().stream()
-                        .map(UserRole::getRole)
+                        .map(userRole -> userRole.getRole().getName().name())
                         .toList())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
