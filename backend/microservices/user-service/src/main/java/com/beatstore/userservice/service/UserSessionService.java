@@ -8,6 +8,7 @@ import com.beatstore.userservice.repository.RefreshTokenRepository;
 import com.beatstore.userservice.repository.UserAccountRepository;
 import com.beatstore.userservice.repository.UserSessionRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +42,11 @@ public class UserSessionService {
         userSessionRepository.save(session);
     }
 
+    @Transactional
     public void createSession(UserAccount userAccount, HttpServletRequest request) {
-        clearSession(userAccount.getUserHash());
-        UserSession session = new UserSession();
-//        session.setUserAccount(userAccount);
+        UserSession session = userSessionRepository.findByUserHash(userAccount.getUserHash())
+                .orElse(new UserSession());
+        session.setUserAccount(userAccount);
         session.setUserHash(userAccount.getUserHash());
         refreshSession(session, request);
     }
