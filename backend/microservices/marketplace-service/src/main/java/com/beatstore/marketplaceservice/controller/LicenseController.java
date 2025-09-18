@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("secured/licenses")
+@RequestMapping("/secured/licenses")
 public class LicenseController {
     private final LicenseService licenseService;
 
