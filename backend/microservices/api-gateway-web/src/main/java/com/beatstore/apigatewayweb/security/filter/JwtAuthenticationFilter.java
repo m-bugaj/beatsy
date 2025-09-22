@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,12 +40,14 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             DecodedJWT decodedJWT = jwtVerifier.verifyToken(jwtToken);
 
             String userHash = decodedJWT.getClaim("userHash").asString();
+            List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 
-            request.mutate()
+            ServerHttpRequest mutatedRequest = request.mutate()
                     .header("X-User-Hash", userHash)
+                    .header("X-Roles", String.join(",", roles))
                     .build();
 
-            return chain.filter(exchange.mutate().request(request).build());
+            return chain.filter(exchange.mutate().request(mutatedRequest).build());
 
         } catch (Exception e) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
