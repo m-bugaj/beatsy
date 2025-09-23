@@ -1,5 +1,6 @@
 package com.beatstore.marketplaceservice.controller;
 
+import com.beatstore.marketplaceservice.context.RequestContext;
 import com.beatstore.marketplaceservice.dto.LicenseDTO;
 import com.beatstore.marketplaceservice.service.LicenseService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/secured/licenses")
 public class LicenseController {
     private final LicenseService licenseService;
+    private final RequestContext requestContext;
 
-    public LicenseController(LicenseService licenseService) {
+    public LicenseController(LicenseService licenseService, RequestContext requestContext) {
         this.licenseService = licenseService;
+        this.requestContext = requestContext;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     public ResponseEntity<Void> createLicense(@RequestBody LicenseDTO licenseDTO) {
         //TODO: userHash z sesji wyciagac do dto
+        licenseDTO.setUserHash(requestContext.getUserHash());
         log.info("Creating license {}", licenseDTO);
         licenseService.createLicense(licenseDTO);
         return ResponseEntity.ok().build();
