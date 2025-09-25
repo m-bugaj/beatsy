@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -12,8 +13,9 @@ import java.math.BigDecimal;
 public class LicenseDTO {
     private String name;
     private BigDecimal defaultPrice;
-    //TODO Dodać json ignore po dodaniu sesji
-//    @JsonIgnore
+
+    @JsonIgnore
+    @Setter
     private String userHash;
 
     private Integer streamLimit;
