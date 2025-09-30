@@ -26,7 +26,6 @@ public class LicenseController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     public ResponseEntity<Void> createLicense(@RequestBody LicenseDTO licenseDTO) {
-        //TODO: userHash z sesji wyciagac do dto
         licenseDTO.setUserHash(requestContext.getUserHash());
         log.info("Creating license {}", licenseDTO);
         licenseService.createLicense(licenseDTO);

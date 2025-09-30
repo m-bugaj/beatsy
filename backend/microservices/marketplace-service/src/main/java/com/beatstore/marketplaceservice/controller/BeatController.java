@@ -1,7 +1,7 @@
 package com.beatstore.marketplaceservice.controller;
 
+import com.beatstore.marketplaceservice.context.RequestContext;
 import com.beatstore.marketplaceservice.dto.BeatUploadDTO;
-import com.beatstore.marketplaceservice.model.Beat;
 import com.beatstore.marketplaceservice.service.BeatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/secured/beat")
 public class BeatController {
     private final BeatService beatService;
+    private final RequestContext requestContext;
 
-    public BeatController(BeatService beatService) {
+    public BeatController(BeatService beatService, RequestContext requestContext) {
         this.beatService = beatService;
+        this.requestContext = requestContext;
     }
 
     @PostMapping("/upload")
@@ -25,9 +27,7 @@ public class BeatController {
             @RequestPart(value = "untaggedWavFile", required = true) MultipartFile untaggedWavFile,
             @RequestPart(value = "stemsFile", required = false) MultipartFile stemsFile
     ) {
-        //zrobic sesje i wyciagnac z niej userHash
-//        beatUploadDTO.getUserHash();
-
+        beatUploadDTO.setUserHash(requestContext.getUserHash());
         beatService.uploadNewBeat(beatUploadDTO, mp3File, untaggedWavFile, stemsFile);
         return ResponseEntity.ok().build();
     }
