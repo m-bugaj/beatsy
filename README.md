@@ -21,6 +21,13 @@
   
 - Per-request JWT verification using RSA256 public key in API Gateway for secure authentication
 
+#### 🌍 `discovery-server`:
+- Centralized service registry using Netflix Eureka
+- Central point where all microservices (user-service, marketplace-service, …) register themselves
+- Enables dynamic service discovery (no need to hardcode URLs between services)
+- Provides a web dashboard at http://localhost:8761
+ to monitor registered instances
+
 #### 🔐 `user-service`:
 - User registration and login
 - Google OAuth2 authentication
