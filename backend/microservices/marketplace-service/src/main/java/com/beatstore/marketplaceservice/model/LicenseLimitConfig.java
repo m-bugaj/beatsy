@@ -1,6 +1,6 @@
 package com.beatstore.marketplaceservice.model;
 
-import com.beatstore.marketplaceservice.dto.LicenseDTO;
+import com.beatstore.marketplaceservice.dto.LicenseCommand;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,17 +48,17 @@ public class LicenseLimitConfig {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public LicenseLimitConfig(LicenseDTO licenseDTO) {
-        this.streamLimit = licenseDTO.getStreamLimit();
-        this.physicalSalesLimit = licenseDTO.getPhysicalSalesLimit();
-        this.allowMp3Download = licenseDTO.getAllowMp3Download();
-        this.allowWavDownload = licenseDTO.getAllowWavDownload();
-        this.allowStemsDownload = licenseDTO.getAllowStemsDownload();
-        this.allowLivePerformance = licenseDTO.getAllowLivePerformance();
-        this.allowBroadcast = licenseDTO.getAllowBroadcast();
-        this.allowYtMonetization = licenseDTO.getAllowYtMonetization();
-        this.useInPaidAds = licenseDTO.getUseInPaidAds();
-        this.useInVideoProjects = licenseDTO.getUseInVideoProjects();
-        this.licenseDurationMonths = licenseDTO.getLicenseDurationMonths();
+    public LicenseLimitConfig(LicenseCommand licenseCommand) {
+        this.streamLimit = licenseCommand.getStreamLimit();
+        this.physicalSalesLimit = licenseCommand.getPhysicalSalesLimit();
+        this.allowMp3Download = licenseCommand.getAllowMp3Download();
+        this.allowWavDownload = licenseCommand.getAllowWavDownload();
+        this.allowStemsDownload = licenseCommand.getAllowStemsDownload();
+        this.allowLivePerformance = licenseCommand.getAllowLivePerformance();
+        this.allowBroadcast = licenseCommand.getAllowBroadcast();
+        this.allowYtMonetization = licenseCommand.getAllowYtMonetization();
+        this.useInPaidAds = licenseCommand.getUseInPaidAds();
+        this.useInVideoProjects = licenseCommand.getUseInVideoProjects();
+        this.licenseDurationMonths = licenseCommand.getLicenseDurationMonths();
     }
 }

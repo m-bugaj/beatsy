@@ -1,6 +1,6 @@
 package com.beatstore.marketplaceservice.service;
 
-import com.beatstore.marketplaceservice.dto.LicenseDTO;
+import com.beatstore.marketplaceservice.dto.LicenseCommand;
 import com.beatstore.marketplaceservice.model.Beat;
 import com.beatstore.marketplaceservice.model.BeatLicense;
 import com.beatstore.marketplaceservice.model.License;
@@ -31,19 +31,19 @@ public class LicenseService {
     }
     //TODO: W PZYSZŁOŚCI DODAĆ OBSŁUGĘ LIMITÓW (NP MAX 4 LICENCJE NA UŻYTKOWNIKA I DODANIE 5 MA RZUCIĆ BŁĘDEM)
     @Transactional
-    public void createLicense(LicenseDTO licenseDTO) {
-        log.info("Creating license for userHash: {}", licenseDTO.getUserHash());
-        LicenseLimitConfig licenseLimitConfig = new LicenseLimitConfig(licenseDTO);
+    public void createLicense(LicenseCommand licenseCommand) {
+        log.info("Creating license for userHash: {}", licenseCommand.getUserHash());
+        LicenseLimitConfig licenseLimitConfig = new LicenseLimitConfig(licenseCommand);
         License license = License.builder()
-                .name(licenseDTO.getName())
-                .defaultPrice(licenseDTO.getDefaultPrice())
-                .userHash(licenseDTO.getUserHash())
+                .name(licenseCommand.getName())
+                .defaultPrice(licenseCommand.getDefaultPrice())
+                .userHash(licenseCommand.getUserHash())
                 .licenseLimitConfig(licenseLimitConfig)
                 .hash(UUID.randomUUID().toString())
                 .build();
         licenseRepository.save(license);
         log.info("License saved with hash: {}", license.getHash());
-        applyLicenseToAllBeatsIfRequested(licenseDTO.getUserHash(), licenseDTO.getApplyToAllBeats(), license);
+        applyLicenseToAllBeatsIfRequested(licenseCommand.getUserHash(), licenseCommand.getApplyToAllBeats(), license);
     }
 
     private void applyLicenseToAllBeatsIfRequested(String userHash, Boolean applyToAllBeats, License license) {

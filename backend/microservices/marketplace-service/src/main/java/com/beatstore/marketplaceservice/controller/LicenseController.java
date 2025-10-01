@@ -1,7 +1,7 @@
 package com.beatstore.marketplaceservice.controller;
 
 import com.beatstore.marketplaceservice.context.RequestContext;
-import com.beatstore.marketplaceservice.dto.LicenseDTO;
+import com.beatstore.marketplaceservice.dto.LicenseCommand;
 import com.beatstore.marketplaceservice.service.LicenseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +25,10 @@ public class LicenseController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
-    public ResponseEntity<Void> createLicense(@RequestBody LicenseDTO licenseDTO) {
-        licenseDTO.setUserHash(requestContext.getUserHash());
-        log.info("Creating license {}", licenseDTO);
-        licenseService.createLicense(licenseDTO);
+    public ResponseEntity<Void> createLicense(@RequestBody LicenseCommand licenseCommand) {
+        licenseCommand.setUserHash(requestContext.getUserHash());
+        log.info("Creating license {}", licenseCommand);
+        licenseService.createLicense(licenseCommand);
         return ResponseEntity.ok().build();
     }
 }

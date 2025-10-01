@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @NoArgsConstructor
-public class LicenseDTO {
+public class LicenseCommand {
     private String name;
     private BigDecimal defaultPrice;
 
