@@ -1,7 +1,7 @@
 package com.beatstore.marketplaceservice.controller;
 
 import com.beatstore.marketplaceservice.context.RequestContext;
-import com.beatstore.marketplaceservice.dto.BeatUploadDTO;
+import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
 import com.beatstore.marketplaceservice.service.BeatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,13 @@ public class BeatController {
 
     @PostMapping("/upload")
     public ResponseEntity<Void> uploadNewBeat(
-            @RequestPart("beatData") BeatUploadDTO beatUploadDTO,
+            @RequestPart("beatData") BeatUploadCommand beatUploadCommand,
             @RequestPart(value = "mp3File", required = false) MultipartFile mp3File,
             @RequestPart(value = "untaggedWavFile", required = true) MultipartFile untaggedWavFile,
             @RequestPart(value = "stemsFile", required = false) MultipartFile stemsFile
     ) {
-        beatUploadDTO.setUserHash(requestContext.getUserHash());
-        beatService.uploadNewBeat(beatUploadDTO, mp3File, untaggedWavFile, stemsFile);
+        beatUploadCommand.setUserHash(requestContext.getUserHash());
+        beatService.uploadNewBeat(beatUploadCommand, mp3File, untaggedWavFile, stemsFile);
         return ResponseEntity.ok().build();
     }
 }
