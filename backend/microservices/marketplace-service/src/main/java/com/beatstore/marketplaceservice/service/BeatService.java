@@ -1,7 +1,7 @@
 package com.beatstore.marketplaceservice.service;
 
 import com.beatstore.marketplaceservice.common.enums.FileType;
-import com.beatstore.marketplaceservice.dto.BeatUploadDTO;
+import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
 import com.beatstore.marketplaceservice.exceptions.MissingRequiredFileException;
 import com.beatstore.marketplaceservice.model.Beat;
 import com.beatstore.marketplaceservice.model.BeatLicense;
@@ -35,18 +35,18 @@ public class BeatService {
     }
 
     @Transactional
-    public void uploadNewBeat(BeatUploadDTO beatUploadDTO, MultipartFile mp3, MultipartFile untaggedWav, MultipartFile stems) {
-        Beat beat = new Beat(beatUploadDTO);
+    public void uploadNewBeat(BeatUploadCommand beatUploadCommand, MultipartFile mp3, MultipartFile untaggedWav, MultipartFile stems) {
+        Beat beat = new Beat(beatUploadCommand);
         String hash = UUID.randomUUID().toString();
         beat.setHash(hash);
         Beat savedBeat = beatRepository.save(beat);
 
-        Set<License> licenses = licenseRepository.findAllByHashIn(beatUploadDTO.getLicenseHashes());
+        Set<License> licenses = licenseRepository.findAllByHashIn(beatUploadCommand.getLicenseHashes());
 
         Set<BeatLicense> beatLicenses = new HashSet<>();
         licenses.forEach(license -> {
             beatLicenses.add(
-                    new BeatLicense(savedBeat, license, beatUploadDTO.getCustomPrice())
+                    new BeatLicense(savedBeat, license, beatUploadCommand.getCustomPrice())
             );
         });
         beatLicenseRepository.saveAll(beatLicenses);

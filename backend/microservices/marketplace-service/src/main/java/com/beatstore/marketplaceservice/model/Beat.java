@@ -1,6 +1,9 @@
 package com.beatstore.marketplaceservice.model;
 
-import com.beatstore.marketplaceservice.dto.BeatUploadDTO;
+import com.beatstore.marketplaceservice.common.enums.ContentVisibility;
+import com.beatstore.marketplaceservice.common.enums.beat.BeatGenre;
+import com.beatstore.marketplaceservice.common.enums.beat.BeatMood;
+import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,13 +44,16 @@ public class Beat {
     private Integer bpm;
 
     @Column(nullable = false)
-    private String genre;
+    @Enumerated(EnumType.STRING)
+    private BeatGenre genre;
 
     @Column(nullable = false)
-    private String mood;
+    @Enumerated(EnumType.STRING)
+    private BeatMood mood;
 
     @Column(nullable = false)
-    private String visibility;
+    @Enumerated(EnumType.STRING)
+    private ContentVisibility visibility;
 
     @OneToMany(mappedBy = "beat")
     private Set<MediaFile> mediaFiles = new HashSet<>();
@@ -58,13 +64,13 @@ public class Beat {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public Beat(BeatUploadDTO beatUploadDTO) {
-        this.userHash = beatUploadDTO.getUserHash();
-        this.title = beatUploadDTO.getTitle();
-        this.description = beatUploadDTO.getDescription();
-        this.bpm = beatUploadDTO.getBpm();
-        this.genre = beatUploadDTO.getGenre();
-        this.mood = beatUploadDTO.getMood();
-        this.visibility = beatUploadDTO.getVisibility();
+    public Beat(BeatUploadCommand beatUploadCommand) {
+        this.userHash = beatUploadCommand.getUserHash();
+        this.title = beatUploadCommand.getTitle();
+        this.description = beatUploadCommand.getDescription();
+        this.bpm = beatUploadCommand.getBpm();
+        this.genre = beatUploadCommand.getGenre();
+        this.mood = beatUploadCommand.getMood();
+        this.visibility = beatUploadCommand.getVisibility();
     }
 }
