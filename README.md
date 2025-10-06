@@ -37,6 +37,9 @@
 #### 🛒 `marketplace-service`:
 - Beat file upload (MP3, WAV, STEMS)
 - Adding beat licenses
+- Real-time playback tracking — Redis and Kafka will be used to handle high-throughput “beat played” events for real-time listener and popularity stats.
+- Short-term data analytics — MongoDB will store detailed play events (user, country, timestamp) for flexible querying and 7–30 day trend analysis.
+- Long-term reporting — Aggregated statistics (daily/weekly plays, unique listeners, etc.) will be periodically transferred to PostgreSQL for historical insights and producer reports.
 
 ### 🛠️ Upcoming Features:
 - Session implementation for storing `userHash`, `subscriptionHash`, etc.
