@@ -37,11 +37,13 @@
 #### 🛒 `marketplace-service`:
 - Beat file upload (MP3, WAV, STEMS)
 - Adding beat licenses
-- Real-time playback tracking — Redis and Kafka will be used to handle high-throughput “beat played” events for real-time listener and popularity stats.
-- Short-term data analytics — MongoDB will store detailed play events (user, country, timestamp) for flexible querying and 7–30 day trend analysis.
-- Long-term reporting — Aggregated statistics (daily/weekly plays, unique listeners, etc.) will be periodically transferred to PostgreSQL for historical insights and producer reports.
+- (Upcoming) Real-time playback tracking — Redis and Kafka will be used to handle high-throughput “beat played” events for real-time listener and popularity stats.
+- (Upcoming) Short-term data analytics — MongoDB will store detailed play events (user, country, timestamp) for flexible querying and 7–30 day trend analysis.
+- (Upcoming) Long-term reporting — Aggregated statistics (daily/weekly plays, unique listeners, etc.) will be periodically transferred to PostgreSQL for historical insights and producer reports.
 
 ### 🛠️ Upcoming Features:
+- Separate authentication from user management — The current user-service handles both user data and authentication logic (JWT, login, etc.). This will be split into two independent microservices to follow proper domain boundaries and improve scalability.
+- auth-service will handle authentication, JWT/refresh tokens, OAuth2 login, and role management. user-service will manage user profiles, public information, and relationships (followers, subscriptions, etc.).
 - Session implementation for storing `userHash`, `subscriptionHash`, etc.
 - Support for `applyToAllBeats` to assign licenses to all beats on creation
 - New `subscriptions` microservice for managing monthly billing and paid plans
