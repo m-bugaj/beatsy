@@ -1,6 +1,5 @@
 package com.beatstore.userservice.controller.internal;
 
-import com.beatstore.userservice.dto.UserInfoCommand;
 import com.beatstore.userservice.dto.UserInfoDTO;
 import com.beatstore.userservice.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +18,8 @@ public class UserInfoInternalController {
     }
 
     @PostMapping
-    public ResponseEntity<Set<UserInfoDTO>> getUserInfo(@RequestBody UserInfoCommand userInfoCommand) {
-        Set<UserInfoDTO> usersInfo = userInfoService.getUsersInfoByUserHashes(userInfoCommand.getUserHashes());
+    public ResponseEntity<Set<UserInfoDTO>> getUserInfo(@RequestBody Set<String> userHashes) {
+        Set<UserInfoDTO> usersInfo = userInfoService.getUsersInfoByUserHashes(userHashes);
         return ResponseEntity.ok(usersInfo);
     }
 }
