@@ -1,7 +1,12 @@
 package com.beatstore.marketplaceservice.service;
 
+import com.beatstore.marketplaceservice.client.UserClient;
+import com.beatstore.marketplaceservice.common.enums.ContentVisibility;
+import com.beatstore.marketplaceservice.common.enums.FeedType;
 import com.beatstore.marketplaceservice.common.enums.FileType;
+import com.beatstore.marketplaceservice.dto.BeatSummaryDTO;
 import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
+import com.beatstore.marketplaceservice.dto.UserInfoDTO;
 import com.beatstore.marketplaceservice.exceptions.MissingRequiredFileException;
 import com.beatstore.marketplaceservice.model.Beat;
 import com.beatstore.marketplaceservice.model.BeatLicense;
@@ -12,11 +17,15 @@ import com.beatstore.marketplaceservice.repository.BeatRepository;
 import com.beatstore.marketplaceservice.repository.LicenseRepository;
 import com.beatstore.marketplaceservice.repository.MediaFileRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class BeatService {
@@ -25,13 +34,15 @@ public class BeatService {
     private final BeatLicenseRepository beatLicenseRepository;
     private final MediaFileRepository mediaFileRepository;
     private final FileStorageService fileStorageService;
+    private final UserClient userClient;
 
-    public BeatService(BeatRepository beatRepository, LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, MediaFileRepository mediaFileRepository, FileStorageService fileStorageService) {
+    public BeatService(BeatRepository beatRepository, LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, MediaFileRepository mediaFileRepository, FileStorageService fileStorageService, UserClient userClient) {
         this.beatRepository = beatRepository;
         this.licenseRepository = licenseRepository;
         this.beatLicenseRepository = beatLicenseRepository;
         this.mediaFileRepository = mediaFileRepository;
         this.fileStorageService = fileStorageService;
+        this.userClient = userClient;
     }
 
     @Transactional
@@ -70,5 +81,22 @@ public class BeatService {
         media.setFileSize((int) file.getSize());
         media.setUploadedAt(LocalDateTime.now());
         mediaFileRepository.save(media);
+    }
+
+    public Set<BeatSummaryDTO> getBeatSummaries(FeedType feedType, Pageable pageable) {
+        Set<Beat> beats = new HashSet<>();
+        switch (feedType) {
+            case NEW -> beats = beatRepository.findAllByVisibilityOrderByCreatedAtDesc(ContentVisibility.PUBLIC, pageable);
+            case DISCOVER -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable);
+        }
+        Set<String> userHashes = beats.stream().map(Beat::getUserHash).collect(Collectors.toSet());
+        Map<String, UserInfoDTO> userHashToUserInfo = userClient.getUserInfo(userHashes).stream().collect(Collectors.toMap(UserInfoDTO::getUserHash, Function.identity()));
+        return beats.stream()
+                .map(beat ->
+                        new BeatSummaryDTO(
+                                beat,
+                                userHashToUserInfo.get(beat.getUserHash())
+                        ))
+                .collect(Collectors.toSet());
     }
 }
