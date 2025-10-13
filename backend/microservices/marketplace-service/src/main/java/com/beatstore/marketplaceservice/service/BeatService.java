@@ -84,13 +84,16 @@ public class BeatService {
     }
 
     public Set<BeatSummaryDTO> getBeatSummaries(FeedType feedType, Pageable pageable) {
-        Set<Beat> beats = new HashSet<>();
+        Set<Beat> beats;
         switch (feedType) {
             case NEW -> beats = beatRepository.findAllByVisibilityOrderByCreatedAtDesc(ContentVisibility.PUBLIC, pageable);
             case DISCOVER -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable);
+            default -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable);
         }
         Set<String> userHashes = beats.stream().map(Beat::getUserHash).collect(Collectors.toSet());
-        Map<String, UserInfoDTO> userHashToUserInfo = userClient.getUserInfo(userHashes).stream().collect(Collectors.toMap(UserInfoDTO::getUserHash, Function.identity()));
+        Map<String, UserInfoDTO> userHashToUserInfo = userClient.getUserInfo(userHashes)
+                .stream()
+                .collect(Collectors.toMap(UserInfoDTO::getUserHash, Function.identity()));
         return beats.stream()
                 .map(beat ->
                         new BeatSummaryDTO(
