@@ -5,6 +5,7 @@ import com.beatstore.marketplaceservice.context.RequestContext;
 import com.beatstore.marketplaceservice.dto.BeatSummaryDTO;
 import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
 import com.beatstore.marketplaceservice.service.BeatService;
+import com.beatstore.marketplaceservice.utils.CollectionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,12 @@ public class BeatController {
     }
 
     @GetMapping("/paged")
-    public ResponseEntity<Set<BeatSummaryDTO>> getAllBeatsPaged(
+    public ResponseEntity<CollectionWrapper<BeatSummaryDTO>> getAllBeatsPaged(
             @RequestParam(defaultValue = "DISCOVER") FeedType feedType,
             @PageableDefault(size = 40) Pageable pageable
     ) {
         Set<BeatSummaryDTO> beatSummaries = beatService.getBeatSummaries(feedType, pageable);
-        return ResponseEntity.ok(beatSummaries);
+        return ResponseEntity.ok(CollectionWrapper.of(beatSummaries));
     }
 
     @PostMapping("/upload")
