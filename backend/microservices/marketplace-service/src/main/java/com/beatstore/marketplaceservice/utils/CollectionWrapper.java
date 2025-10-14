@@ -14,8 +14,7 @@ public class CollectionWrapper<T> {
     private Collection<T> content = new HashSet<>();
 
     public CollectionWrapper(T t) {
-        CollectionWrapper<Object> collectionWrapper = new CollectionWrapper<>();
-        collectionWrapper.content.add(t);
+        this.content.add(t);
     }
 
     public static <T> CollectionWrapper<T> of(Collection<T> collection) {
