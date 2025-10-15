@@ -7,6 +7,24 @@ import lombok.NoArgsConstructor;
 import java.util.Collection;
 import java.util.HashSet;
 
+
+/**
+ * Simple generic wrapper for collections used in API responses.
+ *
+ * <p>✅ Use cases and benefits:
+ * <ul>
+ *   <li>Ensures a consistent JSON response structure — always returns an object
+ *       like <code>{ "content": [...] }</code> instead of a raw array <code>[]</code>.</li>
+ *   <li>Makes frontend integration simpler — clients can always access <code>response.content</code>.</li>
+ *   <li>Stabilizes API contracts between microservices — prevents schema drift when
+ *       collections are serialized differently.</li>
+ * </ul>
+ *
+ * ⚠️ Might be unnecessary for internal or low-level APIs where simple lists/sets
+ * are sufficient.
+ */
+
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
