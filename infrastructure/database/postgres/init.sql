@@ -1,5 +1,5 @@
 CREATE DATABASE auth_db;
-CREATE DATABASE user_service;
+CREATE DATABASE user_db;
 CREATE DATABASE marketplace_service;
 CREATE DATABASE api_gateway;
 
@@ -10,7 +10,7 @@ CREATE USER readonly_user WITH PASSWORD 'password';
 -- Przyznajemy pełne uprawnienia użytkownikowi root
 GRANT ALL PRIVILEGES ON DATABASE dev_beatsy TO root;
 GRANT ALL PRIVILEGES ON DATABASE auth_db TO root;
-GRANT ALL PRIVILEGES ON DATABASE user_service TO root;
+GRANT ALL PRIVILEGES ON DATABASE user_db TO root;
 GRANT ALL PRIVILEGES ON DATABASE marketplace_service TO root;
 GRANT ALL PRIVILEGES ON DATABASE api_gateway TO root;
 
@@ -23,7 +23,7 @@ GRANT CONNECT ON DATABASE auth_db TO readonly_user;
 GRANT USAGE ON SCHEMA public TO readonly_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly_user;
 
-GRANT CONNECT ON DATABASE user_service TO readonly_user;
+GRANT CONNECT ON DATABASE user_db TO readonly_user;
 GRANT USAGE ON SCHEMA public TO readonly_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly_user;
 
