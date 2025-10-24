@@ -1,11 +1,13 @@
 package com.beatstore.userservice.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users_profile")
+@Getter
 public class UsersProfile {
     @Id
     @SequenceGenerator(

@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public class UserInfoDTO {
     private String userHash;
-    private String username;
+    private String displayName;
 }
