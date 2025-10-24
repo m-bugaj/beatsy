@@ -92,6 +92,7 @@ public class BeatService {
         }
         Set<String> userHashes = beats.stream().map(Beat::getUserHash).collect(Collectors.toSet());
         Map<String, UserInfoDTO> userHashToUserInfo = userClient.getUserInfo(userHashes)
+                .getContent()
                 .stream()
                 .collect(Collectors.toMap(UserInfoDTO::getUserHash, Function.identity()));
         return beats.stream()

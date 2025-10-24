@@ -1,6 +1,7 @@
 package com.beatstore.marketplaceservice.client;
 
 import com.beatstore.marketplaceservice.dto.UserInfoDTO;
+import com.beatstore.marketplaceservice.utils.CollectionWrapper;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,5 +13,5 @@ import java.util.Set;
 public interface UserClient {
 
     @PostMapping("/internal/user")
-    Set<UserInfoDTO> getUserInfo(@RequestBody Set<String> userHashes);
+    CollectionWrapper<UserInfoDTO> getUserInfo(@RequestBody Set<String> userHashes);
 }
