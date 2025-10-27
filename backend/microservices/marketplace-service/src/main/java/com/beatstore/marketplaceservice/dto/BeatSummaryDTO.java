@@ -14,6 +14,6 @@ public class BeatSummaryDTO {
     public BeatSummaryDTO(Beat beat, UserInfoDTO userInfo) {
         this.title = beat.getTitle();
         this.visibility = beat.getVisibility();
-        this.author = userInfo.getUsername();
+        this.author = userInfo.getDisplayName();
     }
 }
