@@ -56,6 +56,11 @@
 - Add JWT signature verification for every request that requires authorization
 - Add RequestContext extraction from JWT per request
 - Add Redis-based JWT blacklist: Store invalidated JWTs in Redis with TTL matching token expiry. On each request, reject tokens found in the blacklist.
+- Implement OpenAPI-Based API Contracts
+  - Introduce **contract-first communication** across all microservices (`auth-service`, `user-service`, `marketplace-service`, etc.) using **OpenAPI 3**  
+  - Automatically **generate and publish** `openapi.yaml` specs for each service, then use **OpenAPI Generator** to create clients and DTOs from those contracts  
+  - Add **API versioning and CI/CD validation** to detect and prevent breaking changes between microservice APIs  
+
 
 ---
 
