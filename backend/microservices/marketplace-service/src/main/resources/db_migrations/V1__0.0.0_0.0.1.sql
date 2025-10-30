@@ -21,7 +21,6 @@ CREATE TABLE beats
     title       VARCHAR(255) UNIQUE                                 NOT NULL,
     description VARCHAR(255),
     bpm         INT,
-    genre       VARCHAR(255)                                        NOT NULL,
     mood        VARCHAR(255)                                        NOT NULL,
     visibility  VARCHAR(255)                                        NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -113,6 +112,44 @@ CREATE TABLE beat_license
     CONSTRAINT fk_beat_license_license FOREIGN KEY (license_id) REFERENCES licenses (id),
 
     CONSTRAINT uq_beat_license UNIQUE (beat_id, license_id)
+);
+
+CREATE SEQUENCE genres_id_seq;
+
+ALTER SEQUENCE genres_id_seq
+    OWNER TO admin;
+
+CREATE TABLE genres
+(
+    id   BIGINT DEFAULT NEXTVAL('genres_id_seq'::regclass) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+INSERT INTO genres (name)
+VALUES ('HIP_HOP'),
+       ('TRAP'),
+       ('LOFI'),
+       ('RNB'),
+       ('POP'),
+       ('EDM'),
+       ('HOUSE'),
+       ('DRILL'),
+       ('REGGAETON'),
+       ('DANCEHALL');
+
+CREATE TABLE beat_genres
+(
+    beat_id  BIGINT NOT NULL,
+    genre_id BIGINT NOT NULL,
+    PRIMARY KEY (beat_id, genre_id),
+    CONSTRAINT fk_beat_genres_beat
+        FOREIGN KEY (beat_id)
+            REFERENCES beats (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_beat_genres_genre
+        FOREIGN KEY (genre_id)
+            REFERENCES genres (id)
+            ON DELETE CASCADE
 );
 
 -- Dodanie triggera do każdej tabeli
