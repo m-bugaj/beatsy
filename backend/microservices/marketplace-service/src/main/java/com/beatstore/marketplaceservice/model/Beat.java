@@ -10,6 +10,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "beats")
@@ -43,9 +44,13 @@ public class Beat {
     private String description;
     private Integer bpm;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private BeatGenre genre;
+    @ManyToMany
+    @JoinTable(
+            name = "beat_genres",
+            joinColumns = @JoinColumn(name = "beat_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -64,13 +69,20 @@ public class Beat {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public Beat(BeatUploadCommand beatUploadCommand) {
+    public Beat(BeatUploadCommand beatUploadCommand, Set<Genre> genres) {
         this.userHash = beatUploadCommand.getUserHash();
         this.title = beatUploadCommand.getTitle();
         this.description = beatUploadCommand.getDescription();
         this.bpm = beatUploadCommand.getBpm();
-        this.genre = beatUploadCommand.getGenre();
+        this.genres = genres;
         this.mood = beatUploadCommand.getMood();
         this.visibility = beatUploadCommand.getVisibility();
     }
+
+    public Set<BeatGenre> getGenresNames() {
+        return this.genres.stream()
+                .map(Genre::getName)
+                .collect(Collectors.toSet());
+    }
+
 }
