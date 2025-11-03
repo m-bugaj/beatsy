@@ -4,24 +4,20 @@ import com.beatstore.marketplaceservice.client.UserClient;
 import com.beatstore.marketplaceservice.common.enums.ContentVisibility;
 import com.beatstore.marketplaceservice.common.enums.FeedType;
 import com.beatstore.marketplaceservice.common.enums.FileType;
+import com.beatstore.marketplaceservice.dto.BeatDetailsDTO;
 import com.beatstore.marketplaceservice.dto.BeatSummaryDTO;
 import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
 import com.beatstore.marketplaceservice.dto.UserInfoDTO;
+import com.beatstore.marketplaceservice.exceptions.BeatNotFoundException;
 import com.beatstore.marketplaceservice.exceptions.MissingRequiredFileException;
-import com.beatstore.marketplaceservice.model.Beat;
-import com.beatstore.marketplaceservice.model.BeatLicense;
-import com.beatstore.marketplaceservice.model.License;
-import com.beatstore.marketplaceservice.model.MediaFile;
-import com.beatstore.marketplaceservice.repository.BeatLicenseRepository;
-import com.beatstore.marketplaceservice.repository.BeatRepository;
-import com.beatstore.marketplaceservice.repository.LicenseRepository;
-import com.beatstore.marketplaceservice.repository.MediaFileRepository;
+import com.beatstore.marketplaceservice.exceptions.UserNotFoundException;
+import com.beatstore.marketplaceservice.model.*;
+import com.beatstore.marketplaceservice.repository.*;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -35,19 +31,22 @@ public class BeatService {
     private final MediaFileRepository mediaFileRepository;
     private final FileStorageService fileStorageService;
     private final UserClient userClient;
+    private final GenreRepository genreRepository;
 
-    public BeatService(BeatRepository beatRepository, LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, MediaFileRepository mediaFileRepository, FileStorageService fileStorageService, UserClient userClient) {
+    public BeatService(BeatRepository beatRepository, LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, MediaFileRepository mediaFileRepository, FileStorageService fileStorageService, UserClient userClient, GenreRepository genreRepository) {
         this.beatRepository = beatRepository;
         this.licenseRepository = licenseRepository;
         this.beatLicenseRepository = beatLicenseRepository;
         this.mediaFileRepository = mediaFileRepository;
         this.fileStorageService = fileStorageService;
         this.userClient = userClient;
+        this.genreRepository = genreRepository;
     }
 
     @Transactional
     public void uploadNewBeat(BeatUploadCommand beatUploadCommand, MultipartFile mp3, MultipartFile untaggedWav, MultipartFile stems) {
-        Beat beat = new Beat(beatUploadCommand);
+        Set<Genre> genres = genreRepository.findAllByNameIn(beatUploadCommand.getGenres());
+        Beat beat = new Beat(beatUploadCommand, genres);
         String hash = UUID.randomUUID().toString();
         beat.setHash(hash);
         Beat savedBeat = beatRepository.save(beat);
@@ -102,10 +101,21 @@ public class BeatService {
     private Set<Beat> getBeatsByFeedType(FeedType feedType, Pageable pageable) {
         Set<Beat> beats;
         switch (feedType) {
-            case NEW -> beats = beatRepository.findAllByVisibilityOrderByCreatedAtDesc(ContentVisibility.PUBLIC, pageable);
-            case DISCOVER -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable);
-            default -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable);
+            case NEW -> beats = beatRepository.findAllByVisibilityOrderByCreatedAtDesc(ContentVisibility.PUBLIC, pageable).toSet();
+            case DISCOVER -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable).toSet();
+            default -> beats = beatRepository.findAllByVisibility(ContentVisibility.PUBLIC, pageable).toSet();
         }
         return beats;
+    }
+
+    public BeatDetailsDTO getBeatDetails(String userHash, String beatHash) {
+        Beat beat = beatRepository.findFirstByUserHashAndHash(userHash, beatHash)
+                .orElseThrow(() -> new BeatNotFoundException(userHash, beatHash));
+        UserInfoDTO userInfo = userClient.getUserInfo(Collections.singleton(beat.getUserHash()))
+                .getContent()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException(userHash));
+        return new BeatDetailsDTO(beat, userInfo);
     }
 }
