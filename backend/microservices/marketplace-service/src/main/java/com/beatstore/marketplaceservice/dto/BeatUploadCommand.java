@@ -20,7 +20,7 @@ public class BeatUploadCommand {
     private String title;
     private String description;
     private Integer bpm;
-    private BeatGenre genre;
+    private Set<BeatGenre> genres;
     private BeatMood mood;
     private ContentVisibility visibility;
 
