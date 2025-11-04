@@ -2,17 +2,18 @@ package com.beatstore.marketplaceservice.controller;
 
 import com.beatstore.marketplaceservice.common.enums.FeedType;
 import com.beatstore.marketplaceservice.context.RequestContext;
+import com.beatstore.marketplaceservice.dto.BeatDetailsDTO;
 import com.beatstore.marketplaceservice.dto.BeatSummaryDTO;
 import com.beatstore.marketplaceservice.dto.BeatUploadCommand;
 import com.beatstore.marketplaceservice.service.BeatService;
 import com.beatstore.marketplaceservice.utils.CollectionWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
 import java.util.Set;
 
 @Slf4j
@@ -25,6 +26,13 @@ public class BeatController {
     public BeatController(BeatService beatService, RequestContext requestContext) {
         this.beatService = beatService;
         this.requestContext = requestContext;
+    }
+
+    @GetMapping("/{beatHash}")
+    public ResponseEntity<BeatDetailsDTO> getBeatDetails(@PathVariable String beatHash) {
+        String userHash = requestContext.getUserHash();
+        BeatDetailsDTO beatDetails = beatService.getBeatDetails(beatHash, userHash);
+        return ResponseEntity.ok(beatDetails);
     }
 
     @GetMapping("/paged")
