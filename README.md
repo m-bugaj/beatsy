@@ -65,6 +65,69 @@
   - Beats with this status should be **hidden from all users**, including the author, until the claim is resolved  
   - Only **admins** can view and manage content under this status  
 
+## 🧩 Future Microservice Decomposition Plan
+
+In the future, the **BeatStore** platform could be further decomposed into the following microservices for better scalability, modularity, and team autonomy:
+
+<details>
+<summary>📜 Click to expand — View all 40 potential microservices</summary>
+
+### 🎧 1. CONTENT & BEATS DOMAIN
+1. **Beat Service** — manages beat metadata (title, BPM, mood, tags, etc.).
+2. **Beat File Service** — handles upload and storage of audio files (WAV, MP3, STEMS).
+3. **Beat Genre Service** — manages available genres and beat–genre relations.
+4. **Beat License Service** — defines license types (basic, premium, exclusive).
+5. **Beat Visibility Service** — controls beat visibility (`PUBLIC`, `PRIVATE`, `CLAIMED`, etc.).
+6. **Beat Analytics Service** — tracks plays, downloads, and engagement stats.
+7. **Beat Recommendation Service** — recommends beats based on user taste or behavior.
+8. **Beat Claim Service** — manages copyright or ownership claims.
+9. **Beat Moderation Service** — handles moderation actions and content reports.
+10. **Beat Search Service** — enables search and filtering across beats and metadata.
+
+---
+
+### 👤 2. USER & AUTH DOMAIN
+11. **Auth Service** — manages authentication, JWT, and OAuth2 (Google, Facebook).
+12. **User Service** — stores public user profiles (display name, avatar, bio, links).
+13. **User Verification Service** — handles email confirmation, KYC, or 2FA.
+14. **User Settings Service** — stores preferences like theme, language, and notifications.
+15. **User Badge Service** — manages producer levels, achievements, and badges.
+16. **User Relationship Service** — handles follow/block functionality.
+17. **Notification Service** — delivers email, push, and in-app notifications.
+18. **Subscription Service** — manages premium plans or artist subscriptions.
+19. **Identity Service** — provides unique user identifiers (UUID/hash).
+20. **Activity Service** — logs user sessions and activity history.
+
+---
+
+### 💰 3. PAYMENT & MARKETPLACE DOMAIN
+21. **Marketplace Service** — core service for listing and browsing beats.
+22. **Cart Service** — stores items users intend to purchase.
+23. **Order Service** — manages order lifecycle (creation, confirmation, delivery).
+24. **Payment Gateway Service** — integrates with providers like Stripe or PayPal.
+25. **Billing Service** — issues invoices and stores transaction history.
+26. **Refund Service** — handles refunds and payment disputes.
+27. **Revenue Split Service** — manages royalty splits for co-producers.
+28. **Discount Service** — provides coupon and promotional code management.
+29. **Tax Service** — calculates VAT or sales tax per region.
+30. **Wallet Service** — user balance, withdrawals, and earnings tracking.
+
+---
+
+### 💬 4. SOCIAL & COMMUNITY DOMAIN
+31. **Comment Service** — allows users to comment on beats and profiles.
+32. **Like Service** — manages likes, favorites, and reactions.
+33. **Playlist Service** — enables creating personal beat collections.
+34. **Collaboration Service** — supports co-production and shared ownership.
+35. **Messaging Service** — private chats and collaboration invites.
+36. **Feed Service** — generates personalized activity feeds.
+37. **Report Service** — processes abuse or copyright violation reports.
+38. **Contest Service** — manages beat battles and community challenges.
+39. **Achievement Service** — tracks achievements and gamification rewards.
+40. **Recommendation Feed Service** — generates personalized homepage content.
+
+</details>
+
 
 ---
 
