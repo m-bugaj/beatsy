@@ -2,10 +2,8 @@ package com.beatstore.marketplaceservice.dto;
 
 import com.beatstore.marketplaceservice.common.enums.ContentVisibility;
 import com.beatstore.marketplaceservice.model.Beat;
-import lombok.Builder;
 
 
-@Builder
 public class BeatSummaryDTO {
     private String title;
     private ContentVisibility visibility;
