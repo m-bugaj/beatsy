@@ -9,4 +9,6 @@ import java.util.Set;
 @Repository
 public interface LicenseRepository extends JpaRepository<License, Long> {
     Set<License> findAllByHashIn(Set<String> hashes);
+
+    Set<License> findAllByUserHash(String userHash);
 }
