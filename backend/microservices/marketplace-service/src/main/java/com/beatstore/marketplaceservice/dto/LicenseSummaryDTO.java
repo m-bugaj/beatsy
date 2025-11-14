@@ -8,4 +8,9 @@ import java.math.BigDecimal;
 public class LicenseSummaryDTO {
     private String name;
     private BigDecimal defaultPrice;
+
+    public LicenseSummaryDTO(String name, BigDecimal defaultPrice) {
+        this.name = name;
+        this.defaultPrice = defaultPrice;
+    }
 }

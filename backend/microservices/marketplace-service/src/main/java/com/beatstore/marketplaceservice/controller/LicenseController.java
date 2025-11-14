@@ -2,14 +2,15 @@ package com.beatstore.marketplaceservice.controller;
 
 import com.beatstore.marketplaceservice.context.RequestContext;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
+import com.beatstore.marketplaceservice.dto.LicenseSummaryDTO;
 import com.beatstore.marketplaceservice.service.LicenseService;
+import com.beatstore.marketplaceservice.utils.CollectionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -30,5 +31,12 @@ public class LicenseController {
         log.info("Creating license {}", licenseCommand);
         licenseService.createLicense(licenseCommand);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<CollectionWrapper<LicenseSummaryDTO>> getLicensesForMe() {
+        String userHash = requestContext.getUserHash();
+        Set<LicenseSummaryDTO> licenseSummaries = licenseService.getLicenseSummaries(userHash);
+        return ResponseEntity.ok(CollectionWrapper.of(licenseSummaries));
     }
 }

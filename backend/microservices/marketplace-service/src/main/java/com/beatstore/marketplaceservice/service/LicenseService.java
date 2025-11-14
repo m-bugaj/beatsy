@@ -1,6 +1,7 @@
 package com.beatstore.marketplaceservice.service;
 
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
+import com.beatstore.marketplaceservice.dto.LicenseSummaryDTO;
 import com.beatstore.marketplaceservice.model.Beat;
 import com.beatstore.marketplaceservice.model.BeatLicense;
 import com.beatstore.marketplaceservice.model.License;
@@ -56,5 +57,12 @@ public class LicenseService {
             beatLicenseRepository.saveAll(beatLicenses);
             log.info("Assigned license to {} beats", beatLicenses.size());
         }
+    }
+
+    public Set<LicenseSummaryDTO> getLicenseSummaries(String userHash) {
+        Set<License> licenses = licenseRepository.findAllByUserHash(userHash);
+        return licenses.stream()
+                .map(l -> new LicenseSummaryDTO(l.getName(), l.getDefaultPrice()))
+                .collect(Collectors.toSet());
     }
 }
