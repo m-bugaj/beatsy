@@ -26,6 +26,18 @@ CREATE TABLE content
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE beat_details
+(
+    content_id BIGINT PRIMARY KEY,
+    bpm        INTEGER,
+    key        VARCHAR(10),
+    mood       VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_beat_details_content
+        FOREIGN KEY (content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE
+);
+
 -- CREATE TABLE beat_details
 -- (
 --     id          BIGINT    DEFAULT NEXTVAL('beats_id_seq'::regclass) NOT NULL PRIMARY KEY,
