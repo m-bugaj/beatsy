@@ -26,18 +26,6 @@ CREATE TABLE content
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE beat_details
-(
-    content_id BIGINT PRIMARY KEY,
-    bpm        INTEGER,
-    key        VARCHAR(10),
-    mood       VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_beat_details_content
-        FOREIGN KEY (content_id)
-            REFERENCES content (id)
-            ON DELETE CASCADE
-);
-
 CREATE SEQUENCE genres_id_seq;
 
 ALTER SEQUENCE genres_id_seq
@@ -60,6 +48,35 @@ VALUES ('HIP_HOP'),
        ('DRILL'),
        ('REGGAETON'),
        ('DANCEHALL');
+
+CREATE TABLE content_genres
+(
+    content_id  BIGINT NOT NULL,
+    genre_id BIGINT NOT NULL,
+    PRIMARY KEY (content_id, genre_id),
+    CONSTRAINT fk_content_genres_content
+        FOREIGN KEY (content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_content_genres_genre
+        FOREIGN KEY (genre_id)
+            REFERENCES genres (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE beat_details
+(
+    content_id BIGINT PRIMARY KEY,
+    bpm        INTEGER,
+    key        VARCHAR(10),
+    mood       VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_beat_details_content
+        FOREIGN KEY (content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE
+);
+
+
 
 -- CREATE TABLE beat_details
 -- (
