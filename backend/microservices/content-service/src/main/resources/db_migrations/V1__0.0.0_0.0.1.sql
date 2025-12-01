@@ -38,6 +38,29 @@ CREATE TABLE beat_details
             ON DELETE CASCADE
 );
 
+CREATE SEQUENCE genres_id_seq;
+
+ALTER SEQUENCE genres_id_seq
+    OWNER TO admin;
+
+CREATE TABLE genres
+(
+    id   BIGINT DEFAULT NEXTVAL('genres_id_seq'::regclass) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+INSERT INTO genres (name)
+VALUES ('HIP_HOP'),
+       ('TRAP'),
+       ('LOFI'),
+       ('RNB'),
+       ('POP'),
+       ('EDM'),
+       ('HOUSE'),
+       ('DRILL'),
+       ('REGGAETON'),
+       ('DANCEHALL');
+
 -- CREATE TABLE beat_details
 -- (
 --     id          BIGINT    DEFAULT NEXTVAL('beats_id_seq'::regclass) NOT NULL PRIMARY KEY,
