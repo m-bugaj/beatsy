@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "content")
@@ -45,6 +47,14 @@ public class Content {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ContentVisibility visibility;
+
+    @ManyToMany
+    @JoinTable(
+            name = "content_genres",
+            joinColumns = @JoinColumn(name = "content_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
