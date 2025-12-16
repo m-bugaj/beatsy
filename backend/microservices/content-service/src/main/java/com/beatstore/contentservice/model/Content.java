@@ -2,12 +2,14 @@ package com.beatstore.contentservice.model;
 
 import com.beatstore.contentservice.common.enums.ContentType;
 import com.beatstore.contentservice.common.enums.ContentVisibility;
+import com.beatstore.contentservice.common.enums.MusicGenre;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "content")
@@ -58,4 +60,30 @@ public class Content {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public Content(String userHash, ContentType type, String title, String description, ContentVisibility visibility,
+                   Set<Genre> genres) {
+        this.userHash = userHash;
+        this.type = type;
+        this.title = title;
+        this.description = description;
+        this.visibility = visibility;
+        this.genres = genres;
+    }
+
+    public Set<MusicGenre> getGenresNames() {
+        return this.genres.stream()
+                .map(Genre::getName)
+                .collect(Collectors.toSet());
+    }
+
+    public void update(String title, String description, ContentVisibility visibility, Set<Genre> genres) {
+        this.title = title;
+        this.description = description;
+        this.visibility = visibility;
+
+        this.genres.clear();
+        this.genres.addAll(genres);
+    }
+
 }
