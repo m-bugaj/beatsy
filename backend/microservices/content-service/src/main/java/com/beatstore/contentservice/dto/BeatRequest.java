@@ -10,6 +10,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Set;
 
+//TODO MB: Można rozdzielić na create i update (w create np dodać walidacje not null i not blank) - ewentualnie jakaś dodatkowa   klasa base
 @Getter
 @Setter
 public class BeatRequest {
