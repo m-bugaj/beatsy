@@ -14,4 +14,13 @@ public class BeatNotFoundException extends DomainException {
                 String.format("Beat [%s] for user [%s] not found!", beatHash, userHash)
         );
     }
+
+    public BeatNotFoundException(String beatHash) {
+
+        super(
+                errorCode,
+                httpStatus,
+                String.format("Beat [%s] not found!", beatHash)
+        );
+    }
 }

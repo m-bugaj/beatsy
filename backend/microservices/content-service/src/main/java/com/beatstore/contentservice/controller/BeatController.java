@@ -1,6 +1,7 @@
 package com.beatstore.contentservice.controller;
 
 import com.beatstore.contentservice.context.RequestContext;
+import com.beatstore.contentservice.dto.BeatDetailsDto;
 import com.beatstore.contentservice.dto.BeatRequest;
 import com.beatstore.contentservice.service.BeatService;
 import com.beatstore.contentservice.utils.CollectionWrapper;
@@ -44,6 +45,13 @@ public class BeatController {
         beatRequest.setUserHash(requestContext.getUserHash());
         beatService.updateBeat(beatHash, beatRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{beatHash}")
+    public ResponseEntity<BeatDetailsDto> getBeatDetails(@PathVariable String beatHash) {
+        //TODO MB: Tu trzeba będzie sprawdzać czy jak bit/content nie ma visibility public to czy użeytkowniik ma do niego dostęp
+        BeatDetailsDto beatDetailsDto = beatService.getBeatDetails(beatHash);
+        return ResponseEntity.ok().body(beatDetailsDto);
     }
 
 //    @GetMapping("/{beatHash}")

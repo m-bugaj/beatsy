@@ -1,5 +1,6 @@
 package com.beatstore.contentservice.service;
 
+import com.beatstore.contentservice.dto.BeatDetailsDto;
 import com.beatstore.contentservice.dto.BeatRequest;
 import com.beatstore.contentservice.exceptions.BeatNotFoundException;
 import com.beatstore.contentservice.model.BeatDetails;
@@ -87,6 +88,12 @@ public class BeatService {
 
     private static boolean modifiedGenres(BeatRequest beatRequest, BeatDetails beat) {
         return !beatRequest.getGenres().equals(beat.getContent().getGenresNames());
+    }
+
+    public BeatDetailsDto getBeatDetails(String contentHash) {
+        BeatDetails beat = beatDetailsRepository.findByContent_Hash(contentHash)
+                .orElseThrow(() -> new BeatNotFoundException(contentHash));
+        return new BeatDetailsDto(beat);
     }
 
 //    private void handleFile(MultipartFile file, FileType type, Beat beat) {
