@@ -94,24 +94,24 @@ CREATE TABLE licenses
     CONSTRAINT fk_license_license_limit_config FOREIGN KEY (license_limit_config_id) REFERENCES license_limit_config (id)
 );
 
-CREATE SEQUENCE beat_license_id_seq;
+CREATE SEQUENCE content_license_id_seq;
 
-ALTER SEQUENCE beat_license_id_seq
+ALTER SEQUENCE content_license_id_seq
     OWNER TO admin;
 
-CREATE TABLE beat_license
+CREATE TABLE content_license
 (
-    id           BIGINT    DEFAULT NEXTVAL('beat_license_id_seq'::regclass) PRIMARY KEY,
-    beat_id      BIGINT NOT NULL,
-    license_id   BIGINT NOT NULL,
+    id           BIGINT    DEFAULT NEXTVAL('content_license_id_seq'::regclass) PRIMARY KEY,
+    content_hash VARCHAR(255) NOT NULL,
+    license_id   BIGINT       NOT NULL,
     custom_price NUMERIC(10, 2),
+    active       BOOLEAN      NOT NULL,
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_beat_license_beat FOREIGN KEY (beat_id) REFERENCES beats (id),
-    CONSTRAINT fk_beat_license_license FOREIGN KEY (license_id) REFERENCES licenses (id),
+    CONSTRAINT fk_content_license_license FOREIGN KEY (license_id) REFERENCES licenses (id),
 
-    CONSTRAINT uq_beat_license UNIQUE (beat_id, license_id)
+    CONSTRAINT uq_content_license UNIQUE (content_hash, license_id)
 );
 
 CREATE SEQUENCE genres_id_seq;
