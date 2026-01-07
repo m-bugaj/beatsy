@@ -26,6 +26,7 @@ public class ContentLicense {
     )
     private Long id;
 
+    private String userHash;
     private String contentHash;
 
     @ManyToOne
