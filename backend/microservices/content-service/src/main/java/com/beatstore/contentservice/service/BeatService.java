@@ -1,7 +1,9 @@
 package com.beatstore.contentservice.service;
 
+import com.beatstore.contentservice.common.enums.ContentType;
 import com.beatstore.contentservice.dto.BeatDetailsDto;
 import com.beatstore.contentservice.dto.BeatRequest;
+import com.beatstore.contentservice.dto.ContentBaseDto;
 import com.beatstore.contentservice.exceptions.BeatNotFoundException;
 import com.beatstore.contentservice.model.BeatDetails;
 import com.beatstore.contentservice.model.Genre;
@@ -94,6 +96,12 @@ public class BeatService {
         BeatDetails beat = beatDetailsRepository.findByContent_Hash(contentHash)
                 .orElseThrow(() -> new BeatNotFoundException(contentHash));
         return new BeatDetailsDto(beat);
+    }
+
+    public Set<ContentBaseDto> getContentForUser(String userHash, ContentType contentType) {
+        return contentRepository.findAllByUserHashAndType(userHash, contentType).stream()
+                .map(ContentBaseDto::new)
+                .collect(Collectors.toSet());
     }
 
 //    private void handleFile(MultipartFile file, FileType type, Beat beat) {
