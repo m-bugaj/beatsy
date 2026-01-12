@@ -1,18 +1,20 @@
 package com.beatstore.marketplaceservice.service;
 
+import com.beatstore.marketplaceservice.client.ContentClient;
+import com.beatstore.marketplaceservice.common.enums.content.ContentType;
+import com.beatstore.marketplaceservice.dto.ContentBaseDto;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
 import com.beatstore.marketplaceservice.dto.LicenseSummaryDTO;
-import com.beatstore.marketplaceservice.model.Beat;
-import com.beatstore.marketplaceservice.model.BeatLicense;
-import com.beatstore.marketplaceservice.model.License;
-import com.beatstore.marketplaceservice.model.LicenseLimitConfig;
+import com.beatstore.marketplaceservice.model.*;
 import com.beatstore.marketplaceservice.repository.BeatLicenseRepository;
 import com.beatstore.marketplaceservice.repository.BeatRepository;
+import com.beatstore.marketplaceservice.repository.ContentLicenseRepository;
 import com.beatstore.marketplaceservice.repository.LicenseRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -23,12 +25,16 @@ import java.util.stream.Collectors;
 public class LicenseService {
     private final LicenseRepository licenseRepository;
     private final BeatLicenseRepository beatLicenseRepository;
+    private final ContentLicenseRepository contentLicenseRepository;
     private final BeatRepository beatRepository;
+    private final ContentClient contentClient;
 
-    public LicenseService(LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, BeatRepository beatRepository) {
+    public LicenseService(LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, ContentLicenseRepository contentLicenseRepository, BeatRepository beatRepository, ContentClient contentClient) {
         this.licenseRepository = licenseRepository;
         this.beatLicenseRepository = beatLicenseRepository;
+        this.contentLicenseRepository = contentLicenseRepository;
         this.beatRepository = beatRepository;
+        this.contentClient = contentClient;
     }
     //TODO: W PZYSZŁOŚCI DODAĆ OBSŁUGĘ LIMITÓW (NP MAX 4 LICENCJE NA UŻYTKOWNIKA I DODANIE 5 MA RZUCIĆ BŁĘDEM)
     @Transactional
@@ -44,19 +50,25 @@ public class LicenseService {
                 .build();
         licenseRepository.save(license);
         log.info("License saved with hash: {}", license.getHash());
+        // TODO MB: Zastanowić się jak to powinno być. Ma być jakiś limit licencji w stanie active dla użytkownika / contentu? Musi być jakaś walidacja co do ilości posiadanych licencji (to będzie zależne od rodzaju subskrypcji)
         applyLicenseToAllBeatsIfRequested(licenseCommand.getUserHash(), licenseCommand.getApplyToAllBeats(), license);
     }
 
     private void applyLicenseToAllBeatsIfRequested(String userHash, Boolean applyToAllBeats, License license) {
-        if (Objects.nonNull(applyToAllBeats) && applyToAllBeats) {
-            log.info("applyToAllBeats=true, assigning license to all beats for userHash: {}", userHash);
-            Set<Beat> beats = beatRepository.findAllByUserHash(userHash);
-            Set<BeatLicense> beatLicenses = beats.stream()
-                    .map(beat -> new BeatLicense(beat, license, null))
-                    .collect(Collectors.toSet());
-            beatLicenseRepository.saveAll(beatLicenses);
-            log.info("Assigned license to {} beats", beatLicenses.size());
+        if (Objects.isNull(applyToAllBeats) || !applyToAllBeats) {
+            return;
         }
+        Set<String> contentHashesWithAlreadyAppliedLicense = license.getContentLicenses().stream()
+                .map(ContentLicense::getContentHash)
+                .collect(Collectors.toSet());
+        log.info("applyToAllBeats=true, assigning license to all beats for userHash: {}", userHash);
+        Collection<ContentBaseDto> content = contentClient.getContentForUserHash(userHash, ContentType.BEAT).getContent();
+        Set<ContentLicense> contentLicenses = content.stream()
+                .filter(c -> !contentHashesWithAlreadyAppliedLicense.contains(c.getContentHash()))
+                .map(c -> new ContentLicense(c.getContentHash(), license, true, null))
+                .collect(Collectors.toSet());
+        contentLicenseRepository.saveAll(contentLicenses);
+        log.info("Assigned license to {} content", contentLicenses.size());
     }
 
     public Set<LicenseSummaryDTO> getLicenseSummaries(String userHash) {

@@ -49,7 +49,7 @@ public class License {
     private LicenseLimitConfig licenseLimitConfig;
 
     @OneToMany(mappedBy = "license")
-    private Set<BeatLicense> beatLicenses = new HashSet<>();
+    private Set<ContentLicense> contentLicenses = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

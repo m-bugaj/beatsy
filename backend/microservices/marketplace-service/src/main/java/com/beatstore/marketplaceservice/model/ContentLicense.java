@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "content_license")
@@ -26,7 +27,6 @@ public class ContentLicense {
     )
     private Long id;
 
-    private String userHash;
     private String contentHash;
 
     @ManyToOne
@@ -42,4 +42,12 @@ public class ContentLicense {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
+    public ContentLicense(String contentHash, License license, boolean active, BigDecimal customPrice) {
+        this.contentHash = contentHash;
+        this.license = license;
+        this.active = active;
+        if (Objects.nonNull(customPrice)) {
+            this.customPrice = customPrice;
+        }
+    }
 }
