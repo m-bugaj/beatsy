@@ -8,44 +8,44 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE SEQUENCE beats_id_seq;
-
-ALTER SEQUENCE beats_id_seq
-    OWNER TO admin;
-
-CREATE TABLE beats
-(
-    id          BIGINT    DEFAULT NEXTVAL('beats_id_seq'::regclass) NOT NULL PRIMARY KEY,
-    hash        VARCHAR(255) UNIQUE                                 NOT NULL,
-    user_hash   VARCHAR(255)                                        NOT NULL,
-    title       VARCHAR(255) UNIQUE                                 NOT NULL,
-    description VARCHAR(255),
-    bpm         INT,
-    mood        VARCHAR(255)                                        NOT NULL,
-    visibility  VARCHAR(255)                                        NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE SEQUENCE media_files_id_seq;
-
-ALTER SEQUENCE media_files_id_seq
-    OWNER TO admin;
-
-CREATE TABLE media_files
-(
-    id          BIGINT    DEFAULT NEXTVAL('media_files_id_seq'::regclass) PRIMARY KEY,
-    beat_id     BIGINT       NOT NULL,
-    file_type   VARCHAR(255) NOT NULL,
-    file_url    VARCHAR(255) NOT NULL,
-    mime_type   VARCHAR(255) NOT NULL,
-    file_size   INT          NOT NULL,
-    uploaded_at TIMESTAMP    NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_media_file_beat FOREIGN KEY (beat_id) REFERENCES beats (id) ON DELETE CASCADE
-);
+-- CREATE SEQUENCE beats_id_seq;
+--
+-- ALTER SEQUENCE beats_id_seq
+--     OWNER TO admin;
+--
+-- CREATE TABLE beats
+-- (
+--     id          BIGINT    DEFAULT NEXTVAL('beats_id_seq'::regclass) NOT NULL PRIMARY KEY,
+--     hash        VARCHAR(255) UNIQUE                                 NOT NULL,
+--     user_hash   VARCHAR(255)                                        NOT NULL,
+--     title       VARCHAR(255) UNIQUE                                 NOT NULL,
+--     description VARCHAR(255),
+--     bpm         INT,
+--     mood        VARCHAR(255)                                        NOT NULL,
+--     visibility  VARCHAR(255)                                        NOT NULL,
+--     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+--
+-- CREATE SEQUENCE media_files_id_seq;
+--
+-- ALTER SEQUENCE media_files_id_seq
+--     OWNER TO admin;
+--
+-- CREATE TABLE media_files
+-- (
+--     id          BIGINT    DEFAULT NEXTVAL('media_files_id_seq'::regclass) PRIMARY KEY,
+--     beat_id     BIGINT       NOT NULL,
+--     file_type   VARCHAR(255) NOT NULL,
+--     file_url    VARCHAR(255) NOT NULL,
+--     mime_type   VARCHAR(255) NOT NULL,
+--     file_size   INT          NOT NULL,
+--     uploaded_at TIMESTAMP    NOT NULL,
+--     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--
+--     CONSTRAINT fk_media_file_beat FOREIGN KEY (beat_id) REFERENCES beats (id) ON DELETE CASCADE
+-- );
 
 CREATE SEQUENCE license_limit_config_id_seq;
 
@@ -114,56 +114,56 @@ CREATE TABLE content_license
     CONSTRAINT uq_content_license UNIQUE (content_hash, license_id)
 );
 
-CREATE SEQUENCE genres_id_seq;
-
-ALTER SEQUENCE genres_id_seq
-    OWNER TO admin;
-
-CREATE TABLE genres
-(
-    id   BIGINT DEFAULT NEXTVAL('genres_id_seq'::regclass) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
-INSERT INTO genres (name)
-VALUES ('HIP_HOP'),
-       ('TRAP'),
-       ('LOFI'),
-       ('RNB'),
-       ('POP'),
-       ('EDM'),
-       ('HOUSE'),
-       ('DRILL'),
-       ('REGGAETON'),
-       ('DANCEHALL');
-
-CREATE TABLE beat_genres
-(
-    beat_id  BIGINT NOT NULL,
-    genre_id BIGINT NOT NULL,
-    PRIMARY KEY (beat_id, genre_id),
-    CONSTRAINT fk_beat_genres_beat
-        FOREIGN KEY (beat_id)
-            REFERENCES beats (id)
-            ON DELETE CASCADE,
-    CONSTRAINT fk_beat_genres_genre
-        FOREIGN KEY (genre_id)
-            REFERENCES genres (id)
-            ON DELETE CASCADE
-);
+-- CREATE SEQUENCE genres_id_seq;
+--
+-- ALTER SEQUENCE genres_id_seq
+--     OWNER TO admin;
+--
+-- CREATE TABLE genres
+-- (
+--     id   BIGINT DEFAULT NEXTVAL('genres_id_seq'::regclass) PRIMARY KEY,
+--     name VARCHAR(255) NOT NULL
+-- );
+--
+-- INSERT INTO genres (name)
+-- VALUES ('HIP_HOP'),
+--        ('TRAP'),
+--        ('LOFI'),
+--        ('RNB'),
+--        ('POP'),
+--        ('EDM'),
+--        ('HOUSE'),
+--        ('DRILL'),
+--        ('REGGAETON'),
+--        ('DANCEHALL');
+--
+-- CREATE TABLE beat_genres
+-- (
+--     beat_id  BIGINT NOT NULL,
+--     genre_id BIGINT NOT NULL,
+--     PRIMARY KEY (beat_id, genre_id),
+--     CONSTRAINT fk_beat_genres_beat
+--         FOREIGN KEY (beat_id)
+--             REFERENCES beats (id)
+--             ON DELETE CASCADE,
+--     CONSTRAINT fk_beat_genres_genre
+--         FOREIGN KEY (genre_id)
+--             REFERENCES genres (id)
+--             ON DELETE CASCADE
+-- );
 
 -- Dodanie triggera do każdej tabeli
-CREATE TRIGGER trigger_beats_modified_at
-    BEFORE UPDATE
-    ON beats
-    FOR EACH ROW
-EXECUTE FUNCTION set_modified_at();
-
-CREATE TRIGGER trigger_media_files_modified_at
-    BEFORE UPDATE
-    ON media_files
-    FOR EACH ROW
-EXECUTE FUNCTION set_modified_at();
+-- CREATE TRIGGER trigger_beats_modified_at
+--     BEFORE UPDATE
+--     ON beats
+--     FOR EACH ROW
+-- EXECUTE FUNCTION set_modified_at();
+--
+-- CREATE TRIGGER trigger_media_files_modified_at
+--     BEFORE UPDATE
+--     ON media_files
+--     FOR EACH ROW
+-- EXECUTE FUNCTION set_modified_at();
 
 CREATE TRIGGER trigger_licenses_modified_at
     BEFORE UPDATE
@@ -179,6 +179,6 @@ EXECUTE FUNCTION set_modified_at();
 
 CREATE TRIGGER trigger_beat_license_modified_at
     BEFORE UPDATE
-    ON beat_license
+    ON content_license
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
