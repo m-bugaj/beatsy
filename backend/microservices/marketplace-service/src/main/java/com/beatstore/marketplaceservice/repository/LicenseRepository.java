@@ -11,4 +11,6 @@ public interface LicenseRepository extends JpaRepository<License, Long> {
     Set<License> findAllByHashIn(Set<String> hashes);
 
     Set<License> findAllByUserHash(String userHash);
+
+    Set<License> findAllByUserHashAndHashIn(String userHash, Set<String> hashes);
 }

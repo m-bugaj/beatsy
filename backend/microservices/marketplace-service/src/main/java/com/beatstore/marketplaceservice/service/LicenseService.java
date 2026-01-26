@@ -2,12 +2,12 @@ package com.beatstore.marketplaceservice.service;
 
 import com.beatstore.marketplaceservice.client.ContentClient;
 import com.beatstore.marketplaceservice.common.enums.content.ContentType;
+import com.beatstore.marketplaceservice.dto.AssignLicenseCommand;
 import com.beatstore.marketplaceservice.dto.ContentBaseDto;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
 import com.beatstore.marketplaceservice.dto.LicenseSummaryDTO;
 import com.beatstore.marketplaceservice.model.*;
 import com.beatstore.marketplaceservice.repository.BeatLicenseRepository;
-import com.beatstore.marketplaceservice.repository.BeatRepository;
 import com.beatstore.marketplaceservice.repository.ContentLicenseRepository;
 import com.beatstore.marketplaceservice.repository.LicenseRepository;
 import jakarta.transaction.Transactional;
@@ -26,14 +26,12 @@ public class LicenseService {
     private final LicenseRepository licenseRepository;
     private final BeatLicenseRepository beatLicenseRepository;
     private final ContentLicenseRepository contentLicenseRepository;
-    private final BeatRepository beatRepository;
     private final ContentClient contentClient;
 
-    public LicenseService(LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, ContentLicenseRepository contentLicenseRepository, BeatRepository beatRepository, ContentClient contentClient) {
+    public LicenseService(LicenseRepository licenseRepository, BeatLicenseRepository beatLicenseRepository, ContentLicenseRepository contentLicenseRepository, ContentClient contentClient) {
         this.licenseRepository = licenseRepository;
         this.beatLicenseRepository = beatLicenseRepository;
         this.contentLicenseRepository = contentLicenseRepository;
-        this.beatRepository = beatRepository;
         this.contentClient = contentClient;
     }
     //TODO: W PZYSZŁOŚCI DODAĆ OBSŁUGĘ LIMITÓW (NP MAX 4 LICENCJE NA UŻYTKOWNIKA I DODANIE 5 MA RZUCIĆ BŁĘDEM)
@@ -76,5 +74,23 @@ public class LicenseService {
         return licenses.stream()
                 .map(l -> new LicenseSummaryDTO(l.getName(), l.getDefaultPrice()))
                 .collect(Collectors.toSet());
+    }
+
+    @Transactional
+    public void assignLicensesToContent(AssignLicenseCommand command) {
+        Set<License> licenses = licenseRepository.findAllByUserHashAndHashIn(
+                command.getUserHash(),
+                command.getLicenseHashToCustomPrice().keySet()
+        );
+        Set<ContentLicense> contentLicenses = licenses.stream()
+                .map(license -> new ContentLicense(
+                                command.getContentHash(),
+                                license,
+                                true,
+                                command.getLicenseHashToCustomPrice().get(license.getHash())
+                        )
+                )
+                .collect(Collectors.toSet());
+        contentLicenseRepository.saveAll(contentLicenses);
     }
 }
