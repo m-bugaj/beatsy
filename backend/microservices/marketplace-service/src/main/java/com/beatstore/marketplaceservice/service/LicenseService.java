@@ -91,6 +91,12 @@ public class LicenseService {
                         )
                 )
                 .collect(Collectors.toSet());
+        log.info(
+                "Assigning {} licenses to content={}, user={}",
+                licenses.size(),
+                command.getContentHash(),
+                command.getUserHash()
+        );
         contentLicenseRepository.saveAll(contentLicenses);
     }
 }
