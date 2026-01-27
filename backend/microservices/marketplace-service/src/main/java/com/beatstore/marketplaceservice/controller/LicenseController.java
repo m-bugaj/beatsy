@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping("/secured/licenses")
+@RequestMapping("/secured/license")
 public class LicenseController {
     private final LicenseService licenseService;
     private final RequestContext requestContext;
