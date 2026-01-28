@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.beatstore</groupId>
-	<artifactId>marketplace-service</artifactId>
+	<artifactId>marketplace-service1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>marketplace-service</name>
 	<description>marketplace-service</description>
