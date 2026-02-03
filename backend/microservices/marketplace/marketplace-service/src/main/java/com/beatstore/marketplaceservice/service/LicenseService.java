@@ -13,10 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,12 +47,17 @@ public class LicenseService {
     }
 
     private void applyLicenseToAllBeatsIfRequested(String userHash, Boolean applyToAllBeats, License license) {
-        if (Objects.isNull(applyToAllBeats) || !applyToAllBeats) {
+        if (Objects.isNull(applyToAllBeats)
+                || Boolean.FALSE.equals(applyToAllBeats)) {
             return;
         }
-        Set<String> contentHashesWithAlreadyAppliedLicense = license.getContentLicenses().stream()
+
+        Set<String> contentHashesWithAlreadyAppliedLicense = Optional.ofNullable(license.getContentLicenses())
+                .orElse(Collections.emptySet())
+                .stream()
                 .map(ContentLicense::getContentHash)
                 .collect(Collectors.toSet());
+
         log.info("applyToAllBeats=true, assigning license to all beats for userHash: {}", userHash);
         Collection<ContentBaseDto> content = contentClient.getContentForUserHash(userHash, ContentType.BEAT).getContent();
         Set<ContentLicense> contentLicenses = content.stream()
