@@ -10,16 +10,17 @@ import com.beatstore.contentservice.model.Genre;
 import com.beatstore.contentservice.repository.BeatDetailsRepository;
 import com.beatstore.contentservice.repository.ContentRepository;
 import com.beatstore.contentservice.repository.GenreRepository;
+import com.beatstore.marketplacerestclient.client.LicenseClient;
+import com.beatstore.marketplacerestclient.dto.AssignLicenseCommand;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BeatService {
     private final ContentRepository contentRepository;
     private final BeatDetailsRepository beatDetailsRepository;
@@ -30,11 +31,13 @@ public class BeatService {
 //    private final FileStorageService fileStorageService;
 //    private final UserClient userClient;
     private final GenreRepository genreRepository;
+    private final LicenseClient licenseClient;
 
-    public BeatService(ContentRepository contentRepository, BeatDetailsRepository beatDetailsRepository, GenreRepository genreRepository) {
+    public BeatService(ContentRepository contentRepository, BeatDetailsRepository beatDetailsRepository, GenreRepository genreRepository, LicenseClient licenseClient) {
         this.contentRepository = contentRepository;
         this.beatDetailsRepository = beatDetailsRepository;
         this.genreRepository = genreRepository;
+        this.licenseClient = licenseClient;
     }
 
     //TODO MB: W tej metodzie powinny być również wysyłane eventy na kafke do marketplace w celu dodania ogłoszenia oraz przypisania licencji do beatu
@@ -43,13 +46,19 @@ public class BeatService {
     //(1) pyta ContentService o pre-signed URL do uploadu plików
     //(2) przesyła pliki bezpośrednio do FileUploadService lub S3
     //(3) dopiero po poprawnym uploadzie pliku wysyła do ContentService metadane beatu + referencję do
-    @Transactional
+//    @Transactional
     public void uploadNewBeat(BeatRequest beatRequest) {
         Set<Genre> genres = genreRepository.findAllByNameIn(beatRequest.getGenres());
         BeatDetails beat = new BeatDetails(beatRequest, genres);
         String hash = UUID.randomUUID().toString();
         beat.getContent().setHash(hash);
         BeatDetails savedBeat = beatDetailsRepository.save(beat);
+        log.info("Beat '{}' saved successfully for user '{}'", savedBeat.getContent().getTitle(), savedBeat.getContent().getUserHash());
+        licenseClient.assignLicenseToContent(
+                beatRequest.getUserHash(),
+                new AssignLicenseCommand(hash, beatRequest.getLicenseHashToCustomPrice())
+        );
+
 //        Set<License> licenses = licenseRepository.findAllByHashIn(beatUploadCommand.getLicenseHashes());
 //        Set<BeatLicense> beatLicenses = new HashSet<>();
 

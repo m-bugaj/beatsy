@@ -33,7 +33,11 @@ public class BeatController {
 //            @RequestPart(value = "stemsFile", required = false) MultipartFile stemsFile
     ) {
         beatRequest.setUserHash(requestContext.getUserHash());
+        log.info("Received upload request for beat '{}' from user '{}'",
+                beatRequest.getTitle(),
+                beatRequest.getUserHash());
         beatService.uploadNewBeat(beatRequest);
+        log.info("Successfully processed upload request for beat '{}'", beatRequest.getTitle());
         return ResponseEntity.ok().build();
     }
 

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Set;
 
 //TODO MB: Można rozdzielić na create i update (w create np dodać walidacje not null i not blank) - ewentualnie jakaś dodatkowa   klasa base
@@ -29,6 +30,7 @@ public class BeatRequest {
     private String key;
 
     //LICENSES AND PRICES (Ale to chyba powinno być w mapie licencja do custom price)
-    private Set<String> licenseHashes;
-    private BigDecimal customPrice;
+    private Map<String, BigDecimal> licenseHashToCustomPrice;
+//    private Set<String> licenseHashes;
+//    private BigDecimal customPrice;
 }
