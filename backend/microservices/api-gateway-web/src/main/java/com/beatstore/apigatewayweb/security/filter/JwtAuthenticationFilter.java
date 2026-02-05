@@ -28,9 +28,17 @@ public class JwtAuthenticationFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
+        String path = exchange.getRequest().getURI().getPath();
+        boolean securedEndpoint = path.contains("/secured/");
+
         String jwtToken = Optional.ofNullable(request.getCookies().getFirst("jwt"))
                 .map(HttpCookie::getValue)
                 .orElse(null);
+
+        if (securedEndpoint && jwtToken == null) {
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
+        }
 
         if (Objects.isNull(jwtToken)) {
             return chain.filter(exchange);
