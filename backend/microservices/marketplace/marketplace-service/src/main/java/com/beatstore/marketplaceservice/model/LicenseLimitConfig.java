@@ -3,6 +3,7 @@ package com.beatstore.marketplaceservice.model;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "license_limit_config")
 @Getter
 @Setter
+@NoArgsConstructor
 public class LicenseLimitConfig {
     @Id
     @SequenceGenerator(
