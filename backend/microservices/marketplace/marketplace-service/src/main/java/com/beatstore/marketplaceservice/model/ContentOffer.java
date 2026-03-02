@@ -10,20 +10,20 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "content_license")
+@Table(name = "content_offer")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ContentLicense {
+public class ContentOffer {
     @Id
     @SequenceGenerator(
-            name = "content_license_id_seq",
-            sequenceName = "content_license_id_seq",
+            name = "content_offer_id_seq",
+            sequenceName = "content_offer_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "content_license_id_seq"
+            generator = "content_offer_id_seq"
     )
     private Long id;
 
@@ -31,20 +31,20 @@ public class ContentLicense {
 
     @ManyToOne
     @JoinColumn(
-            name = "license_id",
+            name = "license_template_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private License license;
+    private LicenseTemplate licenseTemplate;
 
     private BigDecimal customPrice;
     private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public ContentLicense(String contentHash, License license, boolean active, BigDecimal customPrice) {
+    public ContentOffer(String contentHash, LicenseTemplate licenseTemplate, boolean active, BigDecimal customPrice) {
         this.contentHash = contentHash;
-        this.license = license;
+        this.licenseTemplate = licenseTemplate;
         this.active = active;
         if (Objects.nonNull(customPrice)) {
             this.customPrice = customPrice;

@@ -76,42 +76,42 @@ CREATE TABLE license_limit_config
     modified_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE SEQUENCE licenses_id_seq;
+CREATE SEQUENCE license_template_id_seq;
 
-ALTER SEQUENCE licenses_id_seq
+ALTER SEQUENCE license_template_id_seq
     OWNER TO admin;
 
-CREATE TABLE licenses
+CREATE TABLE license_template
 (
-    id                      BIGINT    DEFAULT NEXTVAL('licenses_id_seq'::regclass) PRIMARY KEY,
+    id                      BIGINT    DEFAULT NEXTVAL('license_template_id_seq'::regclass) PRIMARY KEY,
     hash                    VARCHAR(255)   NOT NULL,
     name                    VARCHAR(255)   NOT NULL,
     default_price           NUMERIC(10, 2) NOT NULL,
-    user_hash               VARCHAR(255)   NOT NULL,
+    seller_hash               VARCHAR(255)   NOT NULL,
     license_limit_config_id BIGINT         NOT NULL,
     created_at              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_license_license_limit_config FOREIGN KEY (license_limit_config_id) REFERENCES license_limit_config (id)
+    CONSTRAINT fk_license_template_license_limit_config FOREIGN KEY (license_limit_config_id) REFERENCES license_limit_config (id)
 );
 
-CREATE SEQUENCE content_license_id_seq;
+CREATE SEQUENCE content_offer_id_seq;
 
-ALTER SEQUENCE content_license_id_seq
+ALTER SEQUENCE content_offer_id_seq
     OWNER TO admin;
 
-CREATE TABLE content_license
+CREATE TABLE content_offer
 (
-    id           BIGINT    DEFAULT NEXTVAL('content_license_id_seq'::regclass) PRIMARY KEY,
+    id           BIGINT    DEFAULT NEXTVAL('content_offer_id_seq'::regclass) PRIMARY KEY,
     content_hash VARCHAR(255) NOT NULL,
-    license_id   BIGINT       NOT NULL,
+    license_template_id   BIGINT       NOT NULL,
     custom_price NUMERIC(10, 2),
     active       BOOLEAN      NOT NULL,
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_content_license_license FOREIGN KEY (license_id) REFERENCES licenses (id),
+    CONSTRAINT fk_content_offer_license FOREIGN KEY (license_template_id) REFERENCES license_template (id),
 
-    CONSTRAINT uq_content_license UNIQUE (content_hash, license_id)
+    CONSTRAINT uq_content_offer UNIQUE (content_hash, license_template_id)
 );
 
 -- CREATE SEQUENCE genres_id_seq;
@@ -165,9 +165,9 @@ CREATE TABLE content_license
 --     FOR EACH ROW
 -- EXECUTE FUNCTION set_modified_at();
 
-CREATE TRIGGER trigger_licenses_modified_at
+CREATE TRIGGER trigger_license_template_modified_at
     BEFORE UPDATE
-    ON licenses
+    ON license_template
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
 
@@ -177,8 +177,8 @@ CREATE TRIGGER trigger_license_limit_config_modified_at
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
 
-CREATE TRIGGER trigger_beat_license_modified_at
+CREATE TRIGGER trigger_content_offer_modified_at
     BEFORE UPDATE
-    ON content_license
+    ON content_offer
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();

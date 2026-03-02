@@ -45,7 +45,7 @@ public class LicenseLimitConfig {
     private Integer licenseDurationMonths;
 
     @OneToOne(mappedBy = "licenseLimitConfig")
-    private License license;
+    private LicenseTemplate licenseTemplate;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

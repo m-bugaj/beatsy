@@ -9,22 +9,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "licenses")
+@Table(name = "license_template")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class License {
+public class LicenseTemplate {
     @Id
     @SequenceGenerator(
-            name = "licenses_id_seq",
-            sequenceName = "licenses_id_seq",
+            name = "license_template_id_seq",
+            sequenceName = "license_template_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "licenses_id_seq"
+            generator = "license_template_id_seq"
     )
     private Long id;
 
@@ -38,7 +38,7 @@ public class License {
     private BigDecimal defaultPrice;
 
     @Column(nullable = false)
-    private String userHash;
+    private String sellerHash;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(
@@ -48,8 +48,8 @@ public class License {
     )
     private LicenseLimitConfig licenseLimitConfig;
 
-    @OneToMany(mappedBy = "license")
-    private Set<ContentLicense> contentLicenses = new HashSet<>();
+    @OneToMany(mappedBy = "licenseTemplate")
+    private Set<ContentOffer> contentOffers = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
