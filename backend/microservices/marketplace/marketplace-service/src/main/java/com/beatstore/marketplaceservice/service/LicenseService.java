@@ -60,12 +60,12 @@ public class LicenseService {
 
         log.info("applyToAllBeats=true, assigning license to all beats for userHash: {}", userHash);
         Collection<ContentBaseDto> content = contentClient.getContentForUserHash(userHash, ContentType.BEAT).getContent();
-        Set<ContentOffer> contentLicens = content.stream()
+        Set<ContentOffer> contentOffers = content.stream()
                 .filter(c -> !contentHashesWithAlreadyAppliedLicense.contains(c.getContentHash()))
                 .map(c -> new ContentOffer(c.getContentHash(), licenseTemplate, true, null))
                 .collect(Collectors.toSet());
-        contentOfferRepository.saveAll(contentLicens);
-        log.info("Assigned license to {} content", contentLicens.size());
+        contentOfferRepository.saveAll(contentOffers);
+        log.info("Assigned license to {} content", contentOffers.size());
     }
 
     public Set<LicenseSummaryDTO> getLicenseSummaries(String userHash) {
@@ -81,7 +81,7 @@ public class LicenseService {
                 command.getUserHash(),
                 command.getLicenseHashToCustomPrice().keySet()
         );
-        Set<ContentOffer> contentLicense = license.stream()
+        Set<ContentOffer> contentOffers = license.stream()
                 .map(licenseTemplate -> new ContentOffer(
                                 command.getContentHash(),
                         licenseTemplate,
@@ -96,6 +96,6 @@ public class LicenseService {
                 command.getContentHash(),
                 command.getUserHash()
         );
-        contentOfferRepository.saveAll(contentLicense);
+        contentOfferRepository.saveAll(contentOffers);
     }
 }
