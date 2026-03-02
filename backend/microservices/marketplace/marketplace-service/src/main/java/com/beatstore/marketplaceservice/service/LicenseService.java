@@ -69,19 +69,19 @@ public class LicenseService {
     }
 
     public Set<LicenseSummaryDTO> getLicenseSummaries(String userHash) {
-        Set<LicenseTemplate> licens = licenseTemplateRepository.findAllBySellerHash(userHash);
-        return licens.stream()
+        Set<LicenseTemplate> license = licenseTemplateRepository.findAllBySellerHash(userHash);
+        return license.stream()
                 .map(l -> new LicenseSummaryDTO(l.getName(), l.getDefaultPrice()))
                 .collect(Collectors.toSet());
     }
 
     @Transactional
     public void assignLicensesToContent(AssignLicenseCommand command) {
-        Set<LicenseTemplate> licens = licenseTemplateRepository.findAllBySellerHashAndHashIn(
+        Set<LicenseTemplate> license = licenseTemplateRepository.findAllBySellerHashAndHashIn(
                 command.getUserHash(),
                 command.getLicenseHashToCustomPrice().keySet()
         );
-        Set<ContentOffer> contentLicens = licens.stream()
+        Set<ContentOffer> contentLicense = license.stream()
                 .map(licenseTemplate -> new ContentOffer(
                                 command.getContentHash(),
                         licenseTemplate,
@@ -92,10 +92,10 @@ public class LicenseService {
                 .collect(Collectors.toSet());
         log.info(
                 "Assigning {} licenses to content={}, user={}",
-                licens.size(),
+                license.size(),
                 command.getContentHash(),
                 command.getUserHash()
         );
-        contentOfferRepository.saveAll(contentLicens);
+        contentOfferRepository.saveAll(contentLicense);
     }
 }
