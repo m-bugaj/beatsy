@@ -86,12 +86,12 @@ ALTER SEQUENCE cart_items_id_seq
 
 CREATE TABLE cart_items
 (
-    id          BIGINT        DEFAULT NEXTVAL('cart_items_id_seq'::regclass) PRIMARY KEY,
-    cart_id     UUID NOT NULL REFERENCES carts (id) ON DELETE CASCADE,
-    offer_id    UUID NOT NULL,
-    quantity    INT  NOT NULL DEFAULT 1,
-    created_at  TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
+    id                 BIGINT                DEFAULT NEXTVAL('cart_items_id_seq'::regclass) PRIMARY KEY,
+    cart_id            BIGINT       NOT NULL REFERENCES carts (id) ON DELETE CASCADE,
+    content_offer_hash VARCHAR(255) NOT NULL,
+    quantity           INT          NOT NULL DEFAULT 1,
+    created_at         TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    modified_at        TIMESTAMP             DEFAULT CURRENT_TIMESTAMP
 );
 
 -- INDEXY DO DODANIA POZNIEJ I ZASTANOWIENIA
