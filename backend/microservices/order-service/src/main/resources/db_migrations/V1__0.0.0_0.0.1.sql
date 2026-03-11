@@ -73,8 +73,8 @@ ALTER SEQUENCE carts_id_seq
 CREATE TABLE carts
 (
     id          BIGINT    DEFAULT NEXTVAL('carts_id_seq'::regclass) PRIMARY KEY,
-    buyer_id    UUID        NOT NULL,
-    currency    VARCHAR(10) NOT NULL,
+    buyer_hash  VARCHAR(255) NOT NULL,
+    currency    VARCHAR(10)  NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -30,7 +30,7 @@ public class Cart {
     private Long id;
 
     @Column(nullable = false)
-    private UUID buyerId;
+    private String buyerHash;
 
     @Column(nullable = false)
     private String currency;
