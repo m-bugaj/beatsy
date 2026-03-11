@@ -5,7 +5,7 @@ import com.beatstore.marketplaceservice.common.enums.content.ContentType;
 import com.beatstore.marketplaceservice.dto.AssignLicenseCommand;
 import com.beatstore.marketplaceservice.dto.ContentBaseDto;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
-import com.beatstore.marketplaceservice.dto.LicenseSummaryDTO;
+import com.beatstore.marketplaceservice.dto.LicenseTemplateSummaryDTO;
 import com.beatstore.marketplaceservice.model.*;
 import com.beatstore.marketplaceservice.repository.ContentOfferRepository;
 import com.beatstore.marketplaceservice.repository.LicenseTemplateRepository;
@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class LicenseService {
+public class LicenseTemplateService {
     private final LicenseTemplateRepository licenseTemplateRepository;
     private final ContentOfferRepository contentOfferRepository;
     private final ContentClient contentClient;
 
-    public LicenseService(LicenseTemplateRepository licenseTemplateRepository, ContentOfferRepository contentOfferRepository, ContentClient contentClient) {
+    public LicenseTemplateService(LicenseTemplateRepository licenseTemplateRepository, ContentOfferRepository contentOfferRepository, ContentClient contentClient) {
         this.licenseTemplateRepository = licenseTemplateRepository;
         this.contentOfferRepository = contentOfferRepository;
         this.contentClient = contentClient;
@@ -68,10 +68,10 @@ public class LicenseService {
         log.info("Assigned license to {} content", contentOffers.size());
     }
 
-    public Set<LicenseSummaryDTO> getLicenseSummaries(String userHash) {
+    public Set<LicenseTemplateSummaryDTO> getLicenseSummaries(String userHash) {
         Set<LicenseTemplate> license = licenseTemplateRepository.findAllBySellerHash(userHash);
         return license.stream()
-                .map(l -> new LicenseSummaryDTO(l.getName(), l.getDefaultPrice()))
+                .map(l -> new LicenseTemplateSummaryDTO(l.getName(), l.getDefaultPrice()))
                 .collect(Collectors.toSet());
     }
 

@@ -2,8 +2,8 @@ package com.beatstore.marketplaceservice.controller;
 
 import com.beatstore.marketplaceservice.context.RequestContext;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
-import com.beatstore.marketplaceservice.dto.LicenseSummaryDTO;
-import com.beatstore.marketplaceservice.service.LicenseService;
+import com.beatstore.marketplaceservice.dto.LicenseTemplateSummaryDTO;
+import com.beatstore.marketplaceservice.service.LicenseTemplateService;
 import com.beatstore.marketplaceservice.utils.CollectionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,28 +15,28 @@ import java.util.Set;
 @Slf4j
 @RestController
 @RequestMapping("/secured/license")
-public class LicenseController {
-    private final LicenseService licenseService;
+public class LicenseTemplateController {
+    private final LicenseTemplateService licenseTemplateService;
     private final RequestContext requestContext;
 
-    public LicenseController(LicenseService licenseService, RequestContext requestContext) {
-        this.licenseService = licenseService;
+    public LicenseTemplateController(LicenseTemplateService licenseTemplateService, RequestContext requestContext) {
+        this.licenseTemplateService = licenseTemplateService;
         this.requestContext = requestContext;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
-    public ResponseEntity<Void> createLicense(@RequestBody LicenseCommand licenseCommand) {
+    public ResponseEntity<Void> createLicenseTemplate(@RequestBody LicenseCommand licenseCommand) {
         licenseCommand.setUserHash(requestContext.getUserHash());
         log.info("Creating license {}", licenseCommand);
-        licenseService.createLicense(licenseCommand);
+        licenseTemplateService.createLicense(licenseCommand);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CollectionWrapper<LicenseSummaryDTO>> getLicensesForMe() {
+    public ResponseEntity<CollectionWrapper<LicenseTemplateSummaryDTO>> getLicenseTemplatesForMe() {
         String userHash = requestContext.getUserHash();
-        Set<LicenseSummaryDTO> licenseSummaries = licenseService.getLicenseSummaries(userHash);
+        Set<LicenseTemplateSummaryDTO> licenseSummaries = licenseTemplateService.getLicenseSummaries(userHash);
         return ResponseEntity.ok(CollectionWrapper.of(licenseSummaries));
     }
 }

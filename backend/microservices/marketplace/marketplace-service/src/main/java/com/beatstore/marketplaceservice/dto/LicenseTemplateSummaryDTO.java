@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class LicenseSummaryDTO {
+public class LicenseTemplateSummaryDTO {
     private String name;
     private BigDecimal defaultPrice;
 
-    public LicenseSummaryDTO(String name, BigDecimal defaultPrice) {
+    public LicenseTemplateSummaryDTO(String name, BigDecimal defaultPrice) {
         this.name = name;
         this.defaultPrice = defaultPrice;
     }
