@@ -1,12 +1,15 @@
 package com.beatstore.orderservice.model;
 
+import com.beatstore.orderservice.common.enums.Currency;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "carts")
@@ -33,11 +36,25 @@ public class Cart {
     private String buyerHash;
 
     @Column(nullable = false)
-    private String currency;
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public void addItemsToCart(Map<String, Integer> contentOfferHashToQuantity) {
+        Set<CartItem> cartItems = contentOfferHashToQuantity.entrySet()
+                .stream()
+                .map(entry -> new CartItem(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toSet());
+        this.cartItems.addAll(cartItems);
+    }
+
+    public Cart(String buyerHash) {
+        this.buyerHash = buyerHash;
+        this.currency = Currency.USD;
+    }
 }
