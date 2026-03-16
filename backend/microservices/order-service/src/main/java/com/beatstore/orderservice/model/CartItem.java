@@ -41,4 +41,9 @@ public class CartItem {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public CartItem(String contentOfferHash, Integer quantity) {
+        this.contentOfferHash = contentOfferHash;
+        this.quantity = quantity;
+    }
 }
