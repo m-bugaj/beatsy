@@ -1,5 +1,6 @@
 package com.beatstore.orderservice.controller;
 
+import com.beatstore.orderservice.context.RequestContext;
 import com.beatstore.orderservice.dto.AddItemsToCartCommand;
 import com.beatstore.orderservice.model.CartItem;
 import com.beatstore.orderservice.service.CartService;
@@ -14,17 +15,18 @@ import java.util.Set;
 @RequestMapping("/secured/cart")
 public class CartController {
     private final CartService cartService;
+    private final RequestContext requestContext;
 
-    public CartController(CartService cartService) {
+    public CartController(CartService cartService, RequestContext requestContext) {
         this.cartService = cartService;
+        this.requestContext = requestContext;
     }
 
-    //TODO MB: BUYERHASH POWINIEN BYĆ POBIERANY Z REQUEST CONTEXT
-    @PostMapping("/{buyerHash}/items")
+    @PostMapping("/items")
     public ResponseEntity<Void> addItemsToCart(
-            @PathVariable String buyerHash,
             @RequestBody AddItemsToCartCommand command
     ) {
+        String buyerHash = requestContext.getUserHash();
         cartService.createOrUpdateCart(buyerHash, command);
         return ResponseEntity.ok().build();
     }
