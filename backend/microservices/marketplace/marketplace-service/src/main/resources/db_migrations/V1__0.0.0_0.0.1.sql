@@ -101,13 +101,14 @@ ALTER SEQUENCE content_offer_id_seq
 
 CREATE TABLE content_offer
 (
-    id           BIGINT    DEFAULT NEXTVAL('content_offer_id_seq'::regclass) PRIMARY KEY,
-    content_hash VARCHAR(255) NOT NULL,
-    license_template_id   BIGINT       NOT NULL,
-    custom_price NUMERIC(10, 2),
-    active       BOOLEAN      NOT NULL,
-    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id                  BIGINT    DEFAULT NEXTVAL('content_offer_id_seq'::regclass) PRIMARY KEY,
+    hash                VARCHAR(255) NOT NULL,
+    content_hash        VARCHAR(255) NOT NULL,
+    license_template_id BIGINT       NOT NULL,
+    custom_price        NUMERIC(10, 2),
+    active              BOOLEAN      NOT NULL,
+    created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_content_offer_license FOREIGN KEY (license_template_id) REFERENCES license_template (id),
 
