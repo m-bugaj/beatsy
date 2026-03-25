@@ -27,6 +27,7 @@ public class ContentOffer {
     )
     private Long id;
 
+    private String hash;
     private String contentHash;
 
     @ManyToOne
@@ -37,7 +38,9 @@ public class ContentOffer {
     )
     private LicenseTemplate licenseTemplate;
 
+    @Column(nullable = true)
     private BigDecimal customPrice;
+
     private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
