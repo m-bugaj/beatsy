@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -97,5 +98,14 @@ public class LicenseTemplateService {
                 command.getUserHash()
         );
         contentOfferRepository.saveAll(contentOffers);
+    }
+
+    protected Map<String, BigDecimal> getLicenseHashToDefaultPrice(Set<ContentOffer> contentOffers) {
+        return contentOffers.stream()
+                .map(ContentOffer::getLicenseTemplate)
+                .collect(Collectors.toMap(
+                        LicenseTemplate::getHash,
+                        LicenseTemplate::getDefaultPrice
+                ));
     }
 }
