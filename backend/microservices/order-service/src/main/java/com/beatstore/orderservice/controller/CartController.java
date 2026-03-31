@@ -2,13 +2,11 @@ package com.beatstore.orderservice.controller;
 
 import com.beatstore.orderservice.context.RequestContext;
 import com.beatstore.orderservice.dto.AddItemsToCartCommand;
-import com.beatstore.orderservice.model.CartItem;
+import com.beatstore.orderservice.dto.CartDTO;
 import com.beatstore.orderservice.service.CartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @Slf4j
 @RestController
@@ -29,5 +27,12 @@ public class CartController {
         String buyerHash = requestContext.getUserHash();
         cartService.createOrUpdateCart(buyerHash, command);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<CartDTO> getCart() {
+        String buyerHash = requestContext.getUserHash();
+        CartDTO cartDto = cartService.getCartForUser(buyerHash);
+        return ResponseEntity.ok(cartDto);
     }
 }
