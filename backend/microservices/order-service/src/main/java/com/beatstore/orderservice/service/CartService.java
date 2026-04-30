@@ -6,6 +6,7 @@ import com.beatstore.orderservice.exceptions.CartNotFoundException;
 import com.beatstore.orderservice.model.Cart;
 import com.beatstore.orderservice.model.CartItem;
 import com.beatstore.orderservice.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class CartService {
         this.marketplaceClient = marketplaceClient;
     }
 
+    @Transactional
     public void createOrUpdateCart(String buyerHash, AddItemsToCartCommand command) {
         // Na razie system przewiduje tylko jednosztukowe zakupy
         Map<String, Integer> contentOfferHashToQuantity = command.getContentOfferHashes().stream()
@@ -33,6 +35,7 @@ public class CartService {
         Cart cart = cartRepository.findFirstByBuyerHash(buyerHash)
                 .orElseGet(() -> createNewCart(buyerHash));
         cart.addItemsToCart(contentOfferHashToQuantity);
+        cartRepository.save(cart);
     }
 
     private Cart createNewCart(String buyerHash) {
