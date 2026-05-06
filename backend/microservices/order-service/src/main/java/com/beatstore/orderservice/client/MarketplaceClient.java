@@ -18,7 +18,7 @@ public interface MarketplaceClient {
     );
 
     @PostMapping("/internal/content-offer/prices/validate")
-    ResponseEntity<ContentOffersPricesValidationResult> getPricesForContentOffers(
+    ResponseEntity<ContentOffersPricesValidationResult> validatePricesForContentOffers(
             @RequestBody ValidateContentOffersPricesCommand command
     );
 }
