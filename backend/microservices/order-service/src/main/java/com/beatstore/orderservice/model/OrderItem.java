@@ -45,7 +45,7 @@ public class OrderItem {
     private String productType;
 
     @Column(nullable = false)
-    private UUID productId;
+    private String contentHash;
 
     @Column(nullable = false)
     private String productName;

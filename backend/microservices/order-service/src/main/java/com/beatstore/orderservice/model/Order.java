@@ -1,5 +1,8 @@
 package com.beatstore.orderservice.model;
 
+import com.beatstore.orderservice.common.enums.Currency;
+import com.beatstore.orderservice.common.enums.OrderStatus;
+import com.beatstore.orderservice.common.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
@@ -35,17 +39,20 @@ public class Order {
     @Column(nullable = false)
     private String buyerHash;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String currency;
+    private Currency currency;
 
     @Column(nullable = false)
     private BigDecimal totalAmount;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String paymentStatus;
+    private PaymentStatus paymentStatus;
 
     private String paymentProvider;
 
@@ -59,4 +66,19 @@ public class Order {
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public static Order createNewOrder(String buyerHash, Currency currency, BigDecimal totalAmount,
+                                       String paymentProvider, String paymentReference, Set<OrderItem> orderItems) {
+        return Order.builder()
+                .orderNumber(UUID.randomUUID().toString())
+                .buyerHash(buyerHash)
+                .currency(currency)
+                .totalAmount(totalAmount)
+                .status(OrderStatus.CREATED)
+                .paymentStatus(PaymentStatus.PENDING)
+                .paymentProvider(paymentProvider)
+                .paymentReference(paymentReference)
+                .orderItems(orderItems)
+                .build();
+    }
 }
