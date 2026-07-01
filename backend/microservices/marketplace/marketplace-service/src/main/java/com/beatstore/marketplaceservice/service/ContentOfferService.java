@@ -1,12 +1,16 @@
 package com.beatstore.marketplaceservice.service;
 
+import com.beatstore.contentrestclient.client.ContentClient;
+import com.beatstore.contentrestclient.dto.ContentDetailsDto;
+import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
+import com.beatstore.marketplacerestclient.common.dto.ContentOfferCheckoutDetails;
+import com.beatstore.marketplacerestclient.common.enums.ContentType;
 import com.beatstore.marketplaceservice.dto.ContentOffersPricesValidationResult;
 import com.beatstore.marketplaceservice.dto.FetchContentOffersPricesCommand;
 import com.beatstore.marketplaceservice.dto.ValidateContentOffersPricesCommand;
 import com.beatstore.marketplaceservice.model.ContentOffer;
 import com.beatstore.marketplaceservice.repository.ContentOfferRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -16,10 +20,12 @@ import java.util.stream.Collectors;
 public class ContentOfferService {
     private final ContentOfferRepository contentOfferRepository;
     private final LicenseTemplateService licenseTemplateService;
+    private final ContentClient contentClient;
 
-    public ContentOfferService(ContentOfferRepository contentOfferRepository, LicenseTemplateService licenseTemplateService) {
+    public ContentOfferService(ContentOfferRepository contentOfferRepository, LicenseTemplateService licenseTemplateService, ContentClient contentClient) {
         this.contentOfferRepository = contentOfferRepository;
         this.licenseTemplateService = licenseTemplateService;
+        this.contentClient = contentClient;
     }
 
     public Map<String, BigDecimal> getContentOffersPrices(FetchContentOffersPricesCommand command) {
@@ -49,6 +55,30 @@ public class ContentOfferService {
 
         boolean allValid = priceChanges.isEmpty() && unavailableContentOffersHashes.isEmpty();
         return new ContentOffersPricesValidationResult(allValid, unavailableContentOffersHashes, priceChanges);
+    }
+
+    public Set<ContentOfferCheckoutDetails> getContentOffersDetailsForCheckout(Set<String> contentOfferHashes) {
+        Set<ContentOffer> contentOffers = contentOfferRepository.findAllByHashInAndActiveIsTrue(contentOfferHashes);
+        Set<String> contentHashes = contentOffers.stream()
+                .map(ContentOffer::getContentHash)
+                .collect(Collectors.toSet());
+        Map<String, ContentDetailsDto> contentHashToContentDetails = contentClient
+                .getContentDetails(new FetchContentDetailsCommand(contentHashes));
+        return contentOffers.stream()
+                .map(contentOffer -> {
+                    String contentHash = contentOffer.getContentHash();
+                    ContentDetailsDto contentDetailsDto = contentHashToContentDetails.get(contentHash);
+                    return new ContentOfferCheckoutDetails(
+                            contentOffer.getHash(),
+                            contentOffer.getLicenseTemplate().getSellerHash(),
+                            ContentType.valueOf(contentDetailsDto.getContentType().name()),
+                            contentHash,
+                            contentDetailsDto.getContentName(),
+                            contentOffer.getLicenseTemplate().getName(),
+                            contentOffer.getLicenseTemplate().getHash()
+                    );
+                })
+                .collect(Collectors.toSet());
     }
 }
 

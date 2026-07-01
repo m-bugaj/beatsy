@@ -1,7 +1,7 @@
 package com.beatstore.marketplaceservice.service;
 
+import com.beatstore.marketplacerestclient.common.enums.ContentType;
 import com.beatstore.marketplaceservice.client.ContentClient;
-import com.beatstore.marketplaceservice.common.enums.content.ContentType;
 import com.beatstore.marketplaceservice.dto.AssignLicenseCommand;
 import com.beatstore.marketplaceservice.dto.ContentBaseDto;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
@@ -106,6 +106,14 @@ public class LicenseTemplateService {
                 .collect(Collectors.toMap(
                         LicenseTemplate::getHash,
                         LicenseTemplate::getDefaultPrice
+                ));
+    }
+
+    protected Map<String, String> getContentOfferHashToLicenseHash(Set<ContentOffer> contentOffers) {
+        return contentOffers.stream()
+                .collect(Collectors.toMap(
+                        ContentOffer::getHash,
+                        contentOffer -> contentOffer.getLicenseTemplate().getHash()
                 ));
     }
 }

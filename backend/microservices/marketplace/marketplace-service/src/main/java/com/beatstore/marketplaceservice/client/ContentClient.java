@@ -1,6 +1,6 @@
 package com.beatstore.marketplaceservice.client;
 
-import com.beatstore.marketplaceservice.common.enums.content.ContentType;
+import com.beatstore.marketplacerestclient.common.enums.ContentType;
 import com.beatstore.marketplaceservice.dto.ContentBaseDto;
 import com.beatstore.marketplaceservice.utils.CollectionWrapper;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -1,4 +1,4 @@
-package com.beatstore.marketplacerestclient.dto;
+package com.beatstore.marketplacerestclient.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,9 +1,8 @@
 package com.beatstore.marketplaceservice.controller.internal;
 
-import com.beatstore.marketplaceservice.dto.ContentOffersPricesValidationResult;
-import com.beatstore.marketplaceservice.dto.FetchContentOffersPricesCommand;
-import com.beatstore.marketplaceservice.dto.FetchContentOffersPricesResponse;
-import com.beatstore.marketplaceservice.dto.ValidateContentOffersPricesCommand;
+import com.beatstore.marketplacerestclient.common.dto.ContentOfferCheckoutDetails;
+import com.beatstore.marketplacerestclient.common.dto.FetchCheckoutDetailsResponse;
+import com.beatstore.marketplaceservice.dto.*;
 import com.beatstore.marketplaceservice.service.ContentOfferService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +37,11 @@ public class ContentOfferControllerInternal {
     public ResponseEntity<ContentOffersPricesValidationResult> validatePricesForContentOffers(@RequestBody ValidateContentOffersPricesCommand command) {
         ContentOffersPricesValidationResult validationResult = contentOfferService.validatePricesForContentOffers(command);
         return ResponseEntity.ok(validationResult);
+    }
+
+    @PostMapping("/details/checkout")
+    public ResponseEntity<FetchCheckoutDetailsResponse> getContentOffersDetailsForCheckout(@RequestBody Set<String> contentOfferHashes) {
+        Set<ContentOfferCheckoutDetails> contentOffersDetails = contentOfferService.getContentOffersDetailsForCheckout(contentOfferHashes);
+        return ResponseEntity.ok(new FetchCheckoutDetailsResponse(contentOffersDetails));
     }
 }
