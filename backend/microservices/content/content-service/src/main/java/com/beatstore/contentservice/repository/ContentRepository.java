@@ -1,6 +1,6 @@
 package com.beatstore.contentservice.repository;
 
-import com.beatstore.contentservice.common.enums.ContentType;
+import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentservice.common.enums.ContentVisibility;
 import com.beatstore.contentservice.model.Content;
 import org.springframework.data.domain.Page;
@@ -22,4 +22,8 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     Page<Content> findAllByVisibilityOrderByCreatedAtDesc(ContentVisibility visibility, Pageable pageable);
 
     Optional<Content> findFirstByUserHashAndHash(String userHash, String beatHash);
+
+    Optional<Content> findFirstByHash(String contentHash);
+
+    Set<Content> findAllByContentHashIn(Set<String> contentHash);
 }

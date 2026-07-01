@@ -1,6 +1,6 @@
 package com.beatstore.contentservice.dto;
 
-import com.beatstore.contentservice.common.enums.ContentType;
+import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentservice.common.enums.ContentVisibility;
 import com.beatstore.contentservice.model.Content;
 import com.beatstore.contentservice.model.Genre;

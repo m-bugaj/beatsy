@@ -73,6 +73,13 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.beatstore</groupId>
+            <artifactId>content-rest-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

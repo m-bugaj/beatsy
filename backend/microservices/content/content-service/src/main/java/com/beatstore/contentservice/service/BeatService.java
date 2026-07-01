@@ -1,17 +1,21 @@
 package com.beatstore.contentservice.service;
 
-import com.beatstore.contentservice.common.enums.ContentType;
+import com.beatstore.contentrestclient.common.enums.ContentType;
+import com.beatstore.contentrestclient.dto.ContentDetailsDto;
+import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
 import com.beatstore.contentservice.dto.BeatDetailsDto;
 import com.beatstore.contentservice.dto.BeatRequest;
 import com.beatstore.contentservice.dto.ContentBaseDto;
 import com.beatstore.contentservice.exceptions.BeatNotFoundException;
+import com.beatstore.contentservice.exceptions.ContentNotFoundException;
 import com.beatstore.contentservice.model.BeatDetails;
+import com.beatstore.contentservice.model.Content;
 import com.beatstore.contentservice.model.Genre;
 import com.beatstore.contentservice.repository.BeatDetailsRepository;
 import com.beatstore.contentservice.repository.ContentRepository;
 import com.beatstore.contentservice.repository.GenreRepository;
 import com.beatstore.marketplacerestclient.client.LicenseClient;
-import com.beatstore.marketplacerestclient.dto.AssignLicenseCommand;
+import com.beatstore.marketplacerestclient.common.dto.AssignLicenseCommand;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -111,6 +115,20 @@ public class BeatService {
         return contentRepository.findAllByUserHashAndType(userHash, contentType).stream()
                 .map(ContentBaseDto::new)
                 .collect(Collectors.toSet());
+    }
+
+    public Map<String, ContentDetailsDto> getContentDetails(FetchContentDetailsCommand command) {
+        Set<String> contentHashes = command.getContentHashes();
+        return contentRepository.findAllByContentHashIn(contentHashes).stream()
+                .map(content -> ContentDetailsDto.builder()
+                        .contentHash(content.getHash())
+                        .contentName(content.getTitle())
+                        .contentType(content.getType())
+                        .build())
+                .collect(Collectors.toMap(
+                        ContentDetailsDto::getContentHash,
+                        contentDetailsDto -> contentDetailsDto
+                ));
     }
 
 //    private void handleFile(MultipartFile file, FileType type, Beat beat) {

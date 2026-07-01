@@ -1,12 +1,15 @@
 package com.beatstore.contentservice.controller.internal;
 
-import com.beatstore.contentservice.common.enums.ContentType;
+import com.beatstore.contentrestclient.common.enums.ContentType;
+import com.beatstore.contentrestclient.dto.ContentDetailsDto;
+import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
 import com.beatstore.contentservice.dto.ContentBaseDto;
 import com.beatstore.contentservice.service.BeatService;
 import com.beatstore.contentservice.utils.CollectionWrapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -25,5 +28,10 @@ public class ContentControllerInternal {
             ) {
         Set<ContentBaseDto> content = beatService.getContentForUser(userHash, contentType);
         return ResponseEntity.ok(new CollectionWrapper<>(content));
+    }
+
+    @PostMapping("/details")
+    Map<String, ContentDetailsDto> getContentDetails(@RequestBody FetchContentDetailsCommand command) {
+        return beatService.getContentDetails(command);
     }
 }

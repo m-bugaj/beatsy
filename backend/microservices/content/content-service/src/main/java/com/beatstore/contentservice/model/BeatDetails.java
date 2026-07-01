@@ -1,6 +1,6 @@
 package com.beatstore.contentservice.model;
 
-import com.beatstore.contentservice.common.enums.ContentType;
+import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentservice.common.enums.beat.BeatMood;
 import com.beatstore.contentservice.dto.BeatRequest;
 import jakarta.persistence.*;

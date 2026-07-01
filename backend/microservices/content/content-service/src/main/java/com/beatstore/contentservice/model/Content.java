@@ -1,6 +1,6 @@
 package com.beatstore.contentservice.model;
 
-import com.beatstore.contentservice.common.enums.ContentType;
+import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentservice.common.enums.ContentVisibility;
 import com.beatstore.contentservice.common.enums.MusicGenre;
 import jakarta.persistence.*;

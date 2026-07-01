@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     BEAT_NOT_FOUND(1, "Beat not found!"),
+    CONTENT_NOT_FOUND(2, "Content not found!"),
     INTERNAL_SERVER_ERROR(999, "Unexpected server error.");
 
     private final int code;
