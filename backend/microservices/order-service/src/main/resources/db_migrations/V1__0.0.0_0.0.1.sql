@@ -37,6 +37,7 @@ CREATE TABLE order_items
 (
     id                 BIGINT                  DEFAULT NEXTVAL('order_items_id_seq'::regclass) PRIMARY KEY,
     order_id           BIGINT         NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    content_hash       VARCHAR(255)   NOT NULL,
     content_offer_hash VARCHAR(255)   NOT NULL,
     seller_hash        VARCHAR(255)   NOT NULL,
     product_type       VARCHAR(50)    NOT NULL, -- LICENSE | SERVICE | etc
