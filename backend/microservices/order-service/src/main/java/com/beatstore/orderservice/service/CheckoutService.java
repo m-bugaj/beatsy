@@ -2,7 +2,8 @@ package com.beatstore.orderservice.service;
 
 import com.beatstore.marketplacerestclient.client.ContentOfferClient;
 import com.beatstore.marketplacerestclient.common.dto.ContentOfferCheckoutDetails;
-import com.beatstore.orderservice.client.MarketplaceClient;
+import com.beatstore.marketplacerestclient.common.dto.ContentOffersPricesValidationResult;
+import com.beatstore.marketplacerestclient.common.dto.ValidateContentOffersPricesCommand;
 import com.beatstore.orderservice.common.enums.Currency;
 import com.beatstore.orderservice.dto.*;
 import com.beatstore.orderservice.model.Order;
@@ -12,7 +13,6 @@ import com.beatstore.orderservice.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -23,14 +23,12 @@ public class CheckoutService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final CartService cartService;
-    private final MarketplaceClient marketplaceClient;
     private final ContentOfferClient contentOfferClient;
 
-    public CheckoutService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, CartService cartService, MarketplaceClient marketplaceClient, ContentOfferClient contentOfferClient) {
+    public CheckoutService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, CartService cartService, ContentOfferClient contentOfferClient) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.cartService = cartService;
-        this.marketplaceClient = marketplaceClient;
         this.contentOfferClient = contentOfferClient;
     }
 
@@ -139,7 +137,7 @@ public class CheckoutService {
     }
 
     private ContentOffersPricesValidationResult fetchValidationResult(Map<String, BigDecimal> contentOfferHashToPriceInCart) {
-        return marketplaceClient.validatePricesForContentOffers(
+        return contentOfferClient.validatePricesForContentOffers(
                 new ValidateContentOffersPricesCommand(contentOfferHashToPriceInCart)
         ).getBody();
     }

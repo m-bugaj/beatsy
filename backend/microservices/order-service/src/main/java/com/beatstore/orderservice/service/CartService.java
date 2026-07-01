@@ -1,6 +1,8 @@
 package com.beatstore.orderservice.service;
 
-import com.beatstore.orderservice.client.MarketplaceClient;
+import com.beatstore.marketplacerestclient.client.ContentOfferClient;
+import com.beatstore.marketplacerestclient.common.dto.FetchContentOffersPricesCommand;
+import com.beatstore.marketplacerestclient.common.dto.FetchContentOffersPricesResponse;
 import com.beatstore.orderservice.dto.*;
 import com.beatstore.orderservice.exceptions.CartNotFoundException;
 import com.beatstore.orderservice.model.Cart;
@@ -17,11 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
     private final CartRepository cartRepository;
-    private final MarketplaceClient marketplaceClient;
+    private final ContentOfferClient contentOfferClient;
 
-    public CartService(CartRepository cartRepository, MarketplaceClient marketplaceClient) {
+    public CartService(CartRepository cartRepository, ContentOfferClient contentOfferClient) {
         this.cartRepository = cartRepository;
-        this.marketplaceClient = marketplaceClient;
+        this.contentOfferClient = contentOfferClient;
     }
 
     @Transactional
@@ -58,7 +60,7 @@ public class CartService {
     }
 
     private FetchContentOffersPricesResponse getPricesForCartItems(Set<String> contentOfferHashes) {
-        return marketplaceClient
+        return contentOfferClient
                 .getPricesForContentOffers(new FetchContentOffersPricesCommand(contentOfferHashes))
                 .getBody();
     }

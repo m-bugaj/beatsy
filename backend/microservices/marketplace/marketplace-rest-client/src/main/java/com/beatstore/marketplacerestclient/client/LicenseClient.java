@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 //)
 @FeignClient(
         name = "marketplace-service",
+        contextId = "licenseClient",
         url = "http://localhost:8083"
 )
 public interface LicenseClient {
