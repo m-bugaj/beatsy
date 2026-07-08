@@ -25,5 +25,5 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
 
     Optional<Content> findFirstByHash(String contentHash);
 
-    Set<Content> findAllByContentHashIn(Set<String> contentHash);
+    Set<Content> findAllByHashIn(Set<String> contentHashes);
 }

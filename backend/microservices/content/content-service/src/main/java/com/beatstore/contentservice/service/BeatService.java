@@ -4,14 +4,10 @@ import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentrestclient.dto.ContentDetailsDto;
 import com.beatstore.contentrestclient.dto.ContentForUserResponse;
 import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
-import com.beatstore.contentservice.common.enums.MusicGenre;
 import com.beatstore.contentservice.dto.BeatDetailsDto;
 import com.beatstore.contentservice.dto.BeatRequest;
-import com.beatstore.contentservice.dto.ContentBaseDto;
 import com.beatstore.contentservice.exceptions.BeatNotFoundException;
-import com.beatstore.contentservice.exceptions.ContentNotFoundException;
 import com.beatstore.contentservice.model.BeatDetails;
-import com.beatstore.contentservice.model.Content;
 import com.beatstore.contentservice.model.Genre;
 import com.beatstore.contentservice.repository.BeatDetailsRepository;
 import com.beatstore.contentservice.repository.ContentRepository;
@@ -128,7 +124,7 @@ public class BeatService {
 
     public Map<String, ContentDetailsDto> getContentDetails(FetchContentDetailsCommand command) {
         Set<String> contentHashes = command.getContentHashes();
-        return contentRepository.findAllByContentHashIn(contentHashes).stream()
+        return contentRepository.findAllByHashIn(contentHashes).stream()
                 .map(content -> ContentDetailsDto.builder()
                         .contentHash(content.getHash())
                         .contentName(content.getTitle())
