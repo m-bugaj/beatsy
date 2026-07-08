@@ -1,7 +1,8 @@
 package com.beatstore.marketplaceservice.service;
 
-import com.beatstore.marketplacerestclient.common.enums.ContentType;
-import com.beatstore.marketplaceservice.client.ContentClient;
+import com.beatstore.contentrestclient.client.ContentClient;
+import com.beatstore.contentrestclient.common.enums.ContentType;
+import com.beatstore.contentrestclient.dto.ContentForUserResponse;
 import com.beatstore.marketplaceservice.dto.AssignLicenseCommand;
 import com.beatstore.marketplaceservice.dto.ContentBaseDto;
 import com.beatstore.marketplaceservice.dto.LicenseCommand;
@@ -60,7 +61,10 @@ public class LicenseTemplateService {
                 .collect(Collectors.toSet());
 
         log.info("applyToAllBeats=true, assigning license to all beats for userHash: {}", userHash);
-        Collection<ContentBaseDto> content = contentClient.getContentForUserHash(userHash, ContentType.BEAT).getContent();
+        Collection<ContentBaseDto> content = contentClient.getContentForUserHash(userHash, ContentType.BEAT)
+                .stream()
+                .map(c -> new ContentBaseDto(c.getContentHash(), c.getUserHash()))
+                .collect(Collectors.toSet());
         Set<ContentOffer> contentOffers = content.stream()
                 .filter(c -> !contentHashesWithAlreadyAppliedLicense.contains(c.getContentHash()))
                 .map(c -> new ContentOffer(c.getContentHash(), licenseTemplate, true, null))

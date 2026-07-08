@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = {
+		"com.beatstore.contentrestclient.client"
+})
 public class MarketplaceServiceApplication {
 
 	public static void main(String[] args) {

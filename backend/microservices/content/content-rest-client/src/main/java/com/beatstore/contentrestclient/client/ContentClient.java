@@ -1,21 +1,33 @@
 package com.beatstore.contentrestclient.client;
 
+import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentrestclient.dto.ContentDetailsDto;
+import com.beatstore.contentrestclient.dto.ContentForUserResponse;
 import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 import java.util.Set;
 
 @FeignClient(
         name = "content-service",
+        contextId = "contentClient",
         url = "http://localhost:8084"
 )
 public interface ContentClient {
 
     @PostMapping("/internal/content/details")
-    Map<String, ContentDetailsDto> getContentDetails(@RequestBody FetchContentDetailsCommand command);
+    Map<String, ContentDetailsDto> getContentDetails(
+            @RequestBody FetchContentDetailsCommand command
+    );
+
+    @PostMapping("/internal/content/user/{userHash}")
+    Set<ContentForUserResponse> getContentForUserHash(
+            @PathVariable String userHash,
+            @RequestParam ContentType contentType
+    );
 }

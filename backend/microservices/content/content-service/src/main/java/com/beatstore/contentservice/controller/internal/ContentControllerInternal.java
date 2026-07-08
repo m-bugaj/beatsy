@@ -2,6 +2,7 @@ package com.beatstore.contentservice.controller.internal;
 
 import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentrestclient.dto.ContentDetailsDto;
+import com.beatstore.contentrestclient.dto.ContentForUserResponse;
 import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
 import com.beatstore.contentservice.dto.ContentBaseDto;
 import com.beatstore.contentservice.service.BeatService;
@@ -22,12 +23,11 @@ public class ContentControllerInternal {
     }
 
     @GetMapping(path = "/user/{userHash}")
-    public ResponseEntity<CollectionWrapper<ContentBaseDto>> getContentForUser(
+    public Set<ContentForUserResponse> getContentForUser(
             @PathVariable String userHash,
             @RequestParam ContentType contentType
             ) {
-        Set<ContentBaseDto> content = beatService.getContentForUser(userHash, contentType);
-        return ResponseEntity.ok(new CollectionWrapper<>(content));
+        return beatService.getContentForUser(userHash, contentType);
     }
 
     @PostMapping("/details")

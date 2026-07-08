@@ -2,7 +2,9 @@ package com.beatstore.contentservice.service;
 
 import com.beatstore.contentrestclient.common.enums.ContentType;
 import com.beatstore.contentrestclient.dto.ContentDetailsDto;
+import com.beatstore.contentrestclient.dto.ContentForUserResponse;
 import com.beatstore.contentrestclient.dto.FetchContentDetailsCommand;
+import com.beatstore.contentservice.common.enums.MusicGenre;
 import com.beatstore.contentservice.dto.BeatDetailsDto;
 import com.beatstore.contentservice.dto.BeatRequest;
 import com.beatstore.contentservice.dto.ContentBaseDto;
@@ -111,9 +113,16 @@ public class BeatService {
         return new BeatDetailsDto(beat);
     }
 
-    public Set<ContentBaseDto> getContentForUser(String userHash, ContentType contentType) {
+    public Set<ContentForUserResponse> getContentForUser(String userHash, ContentType contentType) {
         return contentRepository.findAllByUserHashAndType(userHash, contentType).stream()
-                .map(ContentBaseDto::new)
+                .map(c -> {
+                    Set<String> genresStrings = c.getGenres().stream()
+                            .map(genre -> genre.getName().name())
+                            .collect(Collectors.toSet());
+                    return new ContentForUserResponse(c.getHash(), c.getUserHash(), c.getType(), c.getTitle(),
+                            c.getDescription(), c.getVisibility().toString(), genresStrings
+                    );
+                })
                 .collect(Collectors.toSet());
     }
 
