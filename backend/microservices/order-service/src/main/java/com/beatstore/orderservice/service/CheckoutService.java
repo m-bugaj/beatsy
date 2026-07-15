@@ -10,6 +10,7 @@ import com.beatstore.orderservice.model.Order;
 import com.beatstore.orderservice.model.OrderItem;
 import com.beatstore.orderservice.repository.OrderItemRepository;
 import com.beatstore.orderservice.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public class CheckoutService {
         this.contentOfferClient = contentOfferClient;
     }
 
+    @Transactional
     public CartValidationResult checkout(String buyerHash) {
             // 1. Fetch the buyer's cart (order with status "CART")
 //         DONE   // 2. Validate the cart items (check if content offers are still available, prices are correct, etc.)
