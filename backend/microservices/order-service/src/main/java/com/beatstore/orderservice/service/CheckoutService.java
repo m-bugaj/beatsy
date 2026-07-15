@@ -55,8 +55,8 @@ public class CheckoutService {
                                 cartItem -> cartItem
                         ));
 
-        Order order = createOrder(buyerHash, cart.getCurrency(), calculateTotalCartPrice(cart), "PAYMENT_PROVIDER",
-                "PAYMENT_REFERENCE", contentOfferHashToCartItemDto);
+        Order order = createOrder(buyerHash, cart.getCurrency(), calculateTotalCartPrice(cart), null,
+                null, contentOfferHashToCartItemDto);
         orderRepository.save(order);
 
         return null;
