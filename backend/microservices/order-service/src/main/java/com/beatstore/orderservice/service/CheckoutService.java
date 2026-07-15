@@ -49,14 +49,8 @@ public class CheckoutService {
             return cartValidationResult;
         }
 
-        Map<String, CartItemDTO> contentOfferHashToCartItemDto = cartItems.stream()
-                        .collect(Collectors.toMap(
-                                CartItemDTO::getContentOfferHash,
-                                cartItem -> cartItem
-                        ));
-
         Order order = createOrder(buyerHash, cart.getCurrency(), calculateTotalCartPrice(cart), null,
-                null, contentOfferHashToCartItemDto);
+                null, cartItems);
         orderRepository.save(order);
 
         return null;
@@ -68,14 +62,14 @@ public class CheckoutService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private Order createOrder(
-            String buyerHash,
-            Currency currency,
-            BigDecimal totalAmount,
-            String paymentProvider,
-            String paymentReference,
-            Map<String, CartItemDTO> contentOfferHashToCartItemDto
-    ) {
+    private Order createOrder(String buyerHash, Currency currency, BigDecimal totalAmount, String paymentProvider,
+                              String paymentReference, Set<CartItemDTO> cartItems) {
+        Map<String, CartItemDTO> contentOfferHashToCartItemDto = cartItems.stream()
+                .collect(Collectors.toMap(
+                        CartItemDTO::getContentOfferHash,
+                        cartItem -> cartItem
+                ));
+
         Set<ContentOfferCheckoutDetails> contentOffersDetails = Objects.requireNonNull(
                         contentOfferClient
                                 .getContentOffersDetailsForCheckout(contentOfferHashToCartItemDto.keySet())
