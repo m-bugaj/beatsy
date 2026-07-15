@@ -6,6 +6,7 @@ import com.beatstore.marketplacerestclient.common.dto.ContentOffersPricesValidat
 import com.beatstore.marketplacerestclient.common.dto.ValidateContentOffersPricesCommand;
 import com.beatstore.orderservice.common.enums.Currency;
 import com.beatstore.orderservice.dto.*;
+import com.beatstore.orderservice.exceptions.EmptyCartException;
 import com.beatstore.orderservice.model.Order;
 import com.beatstore.orderservice.model.OrderItem;
 import com.beatstore.orderservice.repository.OrderItemRepository;
@@ -43,6 +44,9 @@ public class CheckoutService {
         CartDTO cart = cartService.getCartForUser(buyerHash);
         Set<CartItemDTO> cartItems = cart.getCartItems();
 
+        if (cart.getCartItems().isEmpty()) {
+            throw new EmptyCartException(buyerHash);
+        }
 
         CartValidationResult cartValidationResult = validateAndUpdateCart(cart);
         if (cartValidationResult.isNotValid()) {

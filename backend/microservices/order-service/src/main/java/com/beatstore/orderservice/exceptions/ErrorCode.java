@@ -8,7 +8,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(999, "Unexpected server error."),
 
 //    ORDER-SERVICE
-    CART_NOT_FOUND(1000, "Cart not found!");
+    CART_NOT_FOUND(1000, "Cart not found!"),
+    CART_IS_EMPTY(1001, "Cart is empty!");
 
     private final int code;
     private final String defaultMessage;
