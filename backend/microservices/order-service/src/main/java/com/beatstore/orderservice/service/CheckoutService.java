@@ -7,6 +7,7 @@ import com.beatstore.marketplacerestclient.common.dto.ValidateContentOffersPrice
 import com.beatstore.orderservice.common.enums.Currency;
 import com.beatstore.orderservice.dto.*;
 import com.beatstore.orderservice.exceptions.EmptyCartException;
+import com.beatstore.orderservice.mapper.OrderMapper;
 import com.beatstore.orderservice.model.Order;
 import com.beatstore.orderservice.model.OrderItem;
 import com.beatstore.orderservice.repository.OrderItemRepository;
@@ -26,16 +27,18 @@ public class CheckoutService {
     private final OrderItemRepository orderItemRepository;
     private final CartService cartService;
     private final ContentOfferClient contentOfferClient;
+    private final OrderMapper orderMapper;
 
-    public CheckoutService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, CartService cartService, ContentOfferClient contentOfferClient) {
+    public CheckoutService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, CartService cartService, ContentOfferClient contentOfferClient, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.cartService = cartService;
         this.contentOfferClient = contentOfferClient;
+        this.orderMapper = orderMapper;
     }
 
     @Transactional
-    public CartValidationResult checkout(String buyerHash) {
+    public CheckoutResult checkout(String buyerHash) {
             // 1. Fetch the buyer's cart (order with status "CART")
 //         DONE   // 2. Validate the cart items (check if content offers are still available, prices are correct, etc.)
 //         DONE  // 3. Create a new order with status "PENDING_PAYMENT"
@@ -48,16 +51,16 @@ public class CheckoutService {
             throw new EmptyCartException(buyerHash);
         }
 
-        CartValidationResult cartValidationResult = validateAndUpdateCart(cart);
-        if (cartValidationResult.isNotValid()) {
-            return cartValidationResult;
+        CartValidationResult cartValidation = validateAndUpdateCart(cart);
+        if (cartValidation.isNotValid()) {
+            return CheckoutResult.validationFailed(cartValidation);
         }
 
         Order order = createOrder(buyerHash, cart.getCurrency(), calculateTotalCartPrice(cart), null,
                 null, cartItems);
         orderRepository.save(order);
 
-        return null;
+        return CheckoutResult.success(orderMapper.toDto(order));
     }
 
     private BigDecimal calculateTotalCartPrice(CartDTO cart) {

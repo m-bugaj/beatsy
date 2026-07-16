@@ -2,6 +2,7 @@ package com.beatstore.orderservice.controller;
 
 import com.beatstore.orderservice.context.RequestContext;
 import com.beatstore.orderservice.dto.CartValidationResult;
+import com.beatstore.orderservice.dto.CheckoutResult;
 import com.beatstore.orderservice.service.CheckoutService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,9 @@ public class CheckoutController {
     }
 
     @PostMapping
-    public ResponseEntity<CartValidationResult> checkout() {
+    public ResponseEntity<CheckoutResult> checkout() {
         String buyerHash = requestContext.getUserHash();
-        CartValidationResult cartValidationResult = checkoutService.checkout(buyerHash);
-        return ResponseEntity.ok(cartValidationResult);
+        CheckoutResult checkoutResult = checkoutService.checkout(buyerHash);
+        return ResponseEntity.ok(checkoutResult);
     }
 }
