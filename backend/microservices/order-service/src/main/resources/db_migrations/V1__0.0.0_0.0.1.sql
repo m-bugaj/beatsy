@@ -66,17 +66,18 @@ CREATE TABLE order_status_history
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE SEQUENCE carts_id_seq;
+CREATE SEQUENCE cart_id_seq;
 
-ALTER SEQUENCE carts_id_seq
+ALTER SEQUENCE cart_id_seq
     OWNER TO admin;
 
-CREATE TABLE carts
+CREATE TABLE cart
 (
-    id          BIGINT    DEFAULT NEXTVAL('carts_id_seq'::regclass) PRIMARY KEY,
+    id          BIGINT    DEFAULT NEXTVAL('cart_id_seq'::regclass) PRIMARY KEY,
     cart_hash   VARCHAR(255) NOT NULL,
     buyer_hash  VARCHAR(255) NOT NULL,
     currency    VARCHAR(10)  NOT NULL,
+    active      BOOLEAN      NOT NULL DEFAULT TRUE,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -89,7 +90,7 @@ ALTER SEQUENCE cart_items_id_seq
 CREATE TABLE cart_items
 (
     id                 BIGINT                DEFAULT NEXTVAL('cart_items_id_seq'::regclass) PRIMARY KEY,
-    cart_id            BIGINT       NOT NULL REFERENCES carts (id) ON DELETE CASCADE,
+    cart_id            BIGINT       NOT NULL REFERENCES cart (id) ON DELETE CASCADE,
     content_offer_hash VARCHAR(255) NOT NULL,
     quantity           INT          NOT NULL DEFAULT 1,
     created_at         TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
@@ -121,9 +122,9 @@ CREATE TRIGGER trigger_order_status_history_modified_at
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
 
-CREATE TRIGGER trigger_carts_modified_at
+CREATE TRIGGER trigger_cart_modified_at
     BEFORE UPDATE
-    ON carts
+    ON cart
     FOR EACH ROW
 EXECUTE FUNCTION set_modified_at();
 

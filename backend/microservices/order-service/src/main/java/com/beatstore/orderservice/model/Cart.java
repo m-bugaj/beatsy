@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "carts")
+@Table(name = "cart")
 @Getter
 @Setter
 @Builder
@@ -22,13 +22,13 @@ public class Cart {
 
     @Id
     @SequenceGenerator(
-            name = "carts_id_seq",
-            sequenceName = "carts_id_seq",
+            name = "cart_id_seq",
+            sequenceName = "cart_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "carts_id_seq"
+            generator = "cart_id_seq"
     )
     private Long id;
 
@@ -41,6 +41,8 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();
+
+    private boolean active;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
