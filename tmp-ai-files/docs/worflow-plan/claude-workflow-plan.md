@@ -56,10 +56,10 @@ Dla każdego: `/init` (lub prowadzona eksploracja) + ręczna redukcja wyniku do 
 ## Status wykonania
 
 - [x] Dzień 0 — root CLAUDE.md + settings.json (2026-07-20)
-- [ ] Dzień 1 — order-service
-- [ ] Dzień 2 — marketplace
-- [ ] Dzień 3 — auth-service
-- [ ] Dzień 4 — content
-- [ ] Dzień 5 — user-service, api-gateway-web, file-upload
-- [ ] Dzień 6 — szkielety (opcjonalnie)
-- [ ] Dzień 7 — gateway, bff, spięcie root CLAUDE.md
+- [x] Dzień 1 — order-service (2026-07-20)
+- [x] Dzień 2 — marketplace (2026-07-20)
+- [x] Dzień 3 — auth-service (2026-07-20)
+- [x] Dzień 4 — content (2026-07-20)
+- [x] Dzień 5 — user-service, api-gateway-web, file-upload (2026-07-20)
+- [x] Dzień 6 — szkielety (2026-07-20)
+- [x] Dzień 7 — gateway, bff, spięcie root CLAUDE.md (2026-07-20)
