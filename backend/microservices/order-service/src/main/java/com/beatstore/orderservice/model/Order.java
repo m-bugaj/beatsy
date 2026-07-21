@@ -69,7 +69,7 @@ public class Order {
 
     public static Order createNewOrder(String buyerHash, Currency currency, BigDecimal totalAmount,
                                        String paymentProvider, String paymentReference, Set<OrderItem> orderItems) {
-        return Order.builder()
+        Order order = Order.builder()
                 .orderNumber(UUID.randomUUID().toString())
                 .buyerHash(buyerHash)
                 .currency(currency)
@@ -80,5 +80,9 @@ public class Order {
                 .paymentReference(paymentReference)
                 .orderItems(orderItems)
                 .build();
+
+        orderItems.forEach(orderItem -> orderItem.setOrder(order));
+
+        return order;
     }
 }
