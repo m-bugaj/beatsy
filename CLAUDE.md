@@ -56,3 +56,4 @@ Marketplace bitów muzycznych. Backend: mikroserwisy Spring Boot za bramą API. 
 - Nowa sesja na serwis/zadanie zamiast jednego długiego wątku.
 - Do szerokiego "gdzie jest X w repo" używać subagenta `Explore`.
 - Onboarding kolejnych serwisów wg `tmp-ai-files/docs/worflow-plan/claude-workflow-plan.md`.
+- **Wdrażając funkcjonalność, obowiązkowo twórz lub aktualizuj testy jednostkowe** obejmujące zmienioną logikę (nowe reguły, przypadki brzegowe, naprawione błędy). Zmiana logiki bez odpowiadających jej testów jest niekompletna.
