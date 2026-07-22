@@ -41,7 +41,6 @@ CREATE TABLE order_items
     content_offer_hash VARCHAR(255)   NOT NULL,
     seller_hash        VARCHAR(255)   NOT NULL,
     product_type       VARCHAR(50)    NOT NULL, -- LICENSE | SERVICE | etc
-    product_id         UUID           NOT NULL,
     product_name       VARCHAR(255)   NOT NULL,
     quantity           INT            NOT NULL DEFAULT 1,
     unit_price         NUMERIC(12, 2) NOT NULL,

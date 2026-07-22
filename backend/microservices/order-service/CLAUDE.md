@@ -37,7 +37,7 @@ Cart (koszyk) → walidacja cen/dostępności przy checkoucie → Order. Bez int
 
 ## Znane niespójności (do naprawy przy okazji, nie teraz)
 - `OrderRepository extends JpaRepository<Order, Integer>` i `OrderItemRepository extends JpaRepository<OrderItem, Integer>`, mimo że `@Id` obu encji to `Long`. Działa dopóki ktoś nie użyje `findById`/`deleteById` z realnym ID.
-- SQL migracja ma kolumny nieobecne w encjach: `order_items.product_id UUID NOT NULL` (bez default) i `cart.cart_hash VARCHAR NOT NULL`. Hibernate (przez encję) nigdy ich nie ustawi przy insertach — **insert do `order_items` powinien wywalać NOT NULL violation na `product_id`** dopóki się tego nie ujednolici (encja albo migracja).
+- SQL migracja ma kolumnę `cart.cart_hash VARCHAR NOT NULL` nieobecną w encji `Cart` — Hibernate nigdy jej nie ustawi przy insercie, więc insert do `cart` wywali NOT NULL violation dopóki się tego nie ujednolici (encja albo migracja). (Bliźniaczy problem `order_items.product_id` został już usunięty migracją `V2__0.0.1_0.0.2.sql` — kolumna skasowana, bo identyfikator produktu niesie `content_hash`.)
 - `OrderController` jest pusty — brak endpointu do odczytu zamówień/historii statusów.
 - `ErrorCode` zawiera `BEAT_NOT_FOUND` — wygląda na wklejone z innego serwisu (marketplace), nieużywane tu.
 
